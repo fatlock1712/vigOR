@@ -9,3 +9,6 @@ Reminder? Daily checklist?
 Choose a target audience for our website <- ? 
 
 What demo we want to give?
+
+Access to google colab here:
+https://colab.research.google.com/drive/1u80O5RBTI6Tvi68840pSmCfA9ALayi-Z
