@@ -1,1 +1,11 @@
-Loc will figure out what we could Nemotron for healthcare.
+Loc will figure out what we could use Nemotron for healthcare.
+Use Nemotron as AI agent ->  OpenClaw? -> How to host it?
+Ideas:
+Psychology therapists using Nemotron as someone who always listen to their user and give advices
+Air notification
+Suggest hanging out places
+Reminder? Daily checklist?
+
+Choose a target audience for our website <- ? 
+
+What demo we want to give?
