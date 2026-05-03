@@ -3,23 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="home.css">
+    <title>VIGOR</title>
 </head>
 <body>
-<!-- header -->
-    <header>
-        <nav>
-            <div id="logo"></div>
-        </nav>
-    </header>
-<!-- body -->
-    <body>
-        
-    </body>
-<!-- Footer -->
-    <footer>
 
-    </footer>
+<!-- ============ AMBIENT FX (page-wide) ============ -->
+<div class="fx-grid" aria-hidden="true"></div>
+<div class="fx-scanlines" aria-hidden="true"></div>
+<div class="fx-noise" aria-hidden="true"></div>
+
+<!-- ============ TOP STATUS BAR ============ -->
+<div class="status-bar" aria-hidden="true">
+    <div class="status-bar__inner">
+        <span class="status-bar__dot"></span>
+        <span>SYS://VIGOR.HEALTH/PROTOCOL_V2</span>
+        <span class="status-bar__sep">::</span>
+        <span class="status-bar__live">LIVE FEED</span>
+        <span class="status-bar__sep">::</span>
+        <span id="liveClock">00:00:00 UTC</span>
+        <span class="status-bar__sep">::</span>
+        <span>NODE_07</span>
+        <span class="status-bar__sep">::</span>
+        <span>LAT 44.5646</span>
+        <span class="status-bar__sep">::</span>
+        <span>LON -123.2620</span>
+    </div>
+</div>
+
+<!-- ============ NAVIGATION ============ -->
+<header class="nav">
+    <div class="nav__inner">
+        <a href="#" class="nav__logo">
+            <span class="nav__logo-bracket">[</span>
+            <span class="nav__logo-text">vig<span class="nav__logo-accent">OR</span></span>
+            <span class="nav__logo-bracket">]</span>
+            <span class="nav__logo-meta">.health</span>
+        </a>
+
+        <nav class="nav__links" aria-label="primary">
+            <a href="#" class="nav__link nav__link--active">
+                <span class="nav__link-num">01</span> Home
+            </a>
+            <a href="#about" class="nav__link">
+                <span class="nav__link-num">02</span> About
+            </a>
+            <a href="#protocols" class="nav__link">
+                <span class="nav__link-num">03</span> Protocols
+            </a>
+            <a href="#feed" class="nav__link">
+                <span class="nav__link-num">04</span> Feed
+            </a>
+            <a href="#access" class="nav__link">
+                <span class="nav__link-num">05</span> Access
+            </a>
+        </nav>
+
+        <div class="nav__actions">
+            <a href="../Login and SignUp/signup.html" class="btn btn--primary cyber-glitch nav-jackin" data-text="Jack In ▸">
+                JACK IN▸
+            </a>
+        </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+    <div class="hero__bg-corner hero__bg-corner--tl"></div>
+    <div class="hero__bg-corner hero__bg-corner--tr"></div>
+    <div class="hero__bg-corner hero__bg-corner--bl"></div>
+    <div class="hero__bg-corner hero__bg-corner--br"></div>
+
+    <div class="hero__inner">
+        <div class="hero__left">
+            <div class="hero__tag">
+                <span class="hero__tag-dot"></span>
+                <span>// PUBLIC.BETA &mdash; ENROLLMENT OPEN</span>
+            </div>
+
+            <h1 class="hero__title hero__title--rgb">
+                Hack <br>
+                Your Body's<br>
+                Operating <span class="hero__title-accent">System.</span>
+            </h1>
+
+            <p class="hero__sub">
+                <span class="hero__sub-prompt">$&nbsp;</span>vigOR is a health intelligence terminal. Upload medical records, monitor air quality vectors, and receive encrypted protocol recommendations -in real time.<span class="cursor">_</span>
+            </p>
+
+            <div class="hero__cta">
+                <a href="#access" class="btn btn--primary btn--lg cyber-glitch" data-text="// Initialize Account">
+                    // Initialize Account
+                </a>
+                <a href="#protocols" class="btn btn--outline btn--lg">
+                    Read Protocol Docs <i class="fa-solid fa-arrow-right-long"></i>
+                </a>
+            </div>
+
+            <div class="hero__stats">
+                <div class="hero__stat">
+                    <div class="hero__stat-num">128k+</div>
+                    <div class="hero__stat-label">// active.nodes</div>
+                </div>
+                <div class="hero__stat">
+                    <div class="hero__stat-num">99.7<span class="hero__stat-unit">%</span></div>
+                    <div class="hero__stat-label">// uptime.SLA</div>
+                </div>
+                <div class="hero__stat">
+                    <div class="hero__stat-num">AES-256</div>
+                    <div class="hero__stat-label">// encryption</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HUD Panel -->
+        <aside class="hud" aria-hidden="true">
+            <div class="hud__corner hud__corner--tl"></div>
+            <div class="hud__corner hud__corner--tr"></div>
+            <div class="hud__corner hud__corner--bl"></div>
+            <div class="hud__corner hud__corner--br"></div>
+
+            <div class="hud__head">
+                <span class="hud__dot hud__dot--r"></span>
+                <span class="hud__dot hud__dot--y"></span>
+                <span class="hud__dot hud__dot--g"></span>
+                <span class="hud__title">vital.feed &mdash; SUBJECT_001</span>
+                <span class="hud__rec">● REC</span>
+            </div>
+
+            <div class="hud__body">
+                <div class="hud__row">
+                    <span class="hud__label">PULSE</span>
+                    <span class="hud__bar"><span class="hud__bar-fill" style="--w:68%"></span></span>
+                    <span class="hud__val">072 <span>bpm</span></span>
+                </div>
+                <div class="hud__row">
+                    <span class="hud__label">SP_O2</span>
+                    <span class="hud__bar"><span class="hud__bar-fill hud__bar-fill--magenta" style="--w:97%"></span></span>
+                    <span class="hud__val">97 <span>%</span></span>
+                </div>
+                <div class="hud__row">
+                    <span class="hud__label">AQI</span>
+                    <span class="hud__bar"><span class="hud__bar-fill hud__bar-fill--cyan" style="--w:42%"></span></span>
+                    <span class="hud__val">42 <span>μg</span></span>
+                </div>
+                <div class="hud__row">
+                    <span class="hud__label">STRESS</span>
+                    <span class="hud__bar"><span class="hud__bar-fill" style="--w:31%"></span></span>
+                    <span class="hud__val">LOW</span>
+                </div>
+
+                <!-- Mini ECG -->
+                <div class="hud__ecg">
+                    <svg viewBox="0 0 400 80" preserveAspectRatio="none">
+                        <polyline points="0,40 40,40 50,40 60,20 70,60 80,30 90,40 130,40 140,40 150,15 160,65 170,30 180,40 220,40 230,40 240,18 250,62 260,28 270,40 310,40 320,40 330,20 340,60 350,30 360,40 400,40" />
+                    </svg>
+                </div>
+
+                <div class="hud__foot">
+                    <span>&gt; sync.ok</span>
+                    <span>uplink: 2.4ms</span>
+                    <span>node_07</span>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Marquee -->
+    <div class="marquee" aria-hidden="true">
+        <div class="marquee__track">
+            <span>// MEDICAL.RECORDS &nbsp; ✦ &nbsp;</span>
+            <span>AIR.QUALITY.MAP &nbsp; ✦ &nbsp;</span>
+            <span>BIOMETRIC.SYNC &nbsp; ✦ &nbsp;</span>
+            <span>ENCRYPTED.CHANNEL &nbsp; ✦ &nbsp;</span>
+            <span>PHYSICIAN.UPLINK &nbsp; ✦ &nbsp;</span>
+            <span>EMERGENCY.PROTOCOL &nbsp; ✦ &nbsp;</span>
+            <span>// MEDICAL.RECORDS &nbsp; ✦ &nbsp;</span>
+            <span>AIR.QUALITY.MAP &nbsp; ✦ &nbsp;</span>
+            <span>BIOMETRIC.SYNC &nbsp; ✦ &nbsp;</span>
+            <span>ENCRYPTED.CHANNEL &nbsp; ✦ &nbsp;</span>
+            <span>PHYSICIAN.UPLINK &nbsp; ✦ &nbsp;</span>
+            <span>EMERGENCY.PROTOCOL &nbsp; ✦ &nbsp;</span>
+        </div>
+    </div>
+</section>
 
 </body>
 </html>
