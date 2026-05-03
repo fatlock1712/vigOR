@@ -660,3 +660,97 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
     0%   { transform: translateX(0); }
     100% { transform: translateX(-50%); }
 }
+#video video{
+    width: 600px;
+    height: 500px;
+}
+
+
+
+
+
+#user-profile {
+  position: relative;
+}
+
+.avatar-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  /* background: linear-gradient(135deg, #0080ff, #00aaff); */
+  color: rgb(0, 0, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Orbitron", monospace;
+  font-size: 18px;
+  font-weight: 900;
+  cursor: pointer;
+  /* border: 2px solid #0a0a0f; */
+  /* box-shadow: 0 0 10px rgba(0, 170, 255, 0.45); */
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  
+}
+
+.avatar-circle:hover {
+    transform: scale(1.05);
+    box-shadow: var(--glow);
+}
+#user-email-display {
+    color: black;
+    font-family: 'JetBrains Mono', monospace;
+    /* text-shadow: 0 0 5px var(--neon-bright); */
+    font-size: 14px;
+}
+
+.avatar-dropdown {
+    position: absolute;
+    top: 100%; 
+    right: 0;
+    margin-top: 8px; 
+    /* background-color: var(--ink, #0a0a0f);  */
+    /* border: 1px solid var(--neon-bright, #00aaff);  */
+    border-radius: 6px;
+    padding: 6px;
+    /* box-shadow: 0 4px 15px rgba(0, 170, 255, 0.3); */
+    min-width: 130px;
+    
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+
+#user-profile:hover .avatar-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+
+.logout-btn {
+    background: white;
+    color: #000000;
+    /* border: none; */
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 10px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 4px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.nav__logo ul{
+    margin-left: 30px;
+}
+
