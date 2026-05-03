@@ -43,7 +43,7 @@ loginForm.addEventListener("submit", async (e) => {
     await signInWithEmailAndPassword(auth, email, password);
     
     alert("Login successfully!");
-    window.location.assign("../index.html");
+    window.location.assign("./asthma-form.html");
   } catch (error) {
     console.error("Login error:", error);
 
@@ -81,7 +81,7 @@ googleLoginBtn.addEventListener("click", async () => {
       { merge: true }
     );
 
-    window.location.assign("../index.html");
+    window.location.assign("./asthma-form.html");
   } catch (error) {
     console.error("Google login error:", error);
     alert("Google login failed: " + error.message);
