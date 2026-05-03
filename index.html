@@ -431,9 +431,18 @@
         <span class="map-header-title">Air Quality — Live · Oregon, US</span>
       </div>
       <div class="map-placeholder">
-        <div class="map-placeholder-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-        <p>Google Maps — API Key Required</p>
-        <p style="font-size:11px;color:#94a3b8;font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;">Replace YOUR_GOOGLE_MAPS_API_KEY in test.html</p>
+        <!-- <div class="map-placeholder-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div> -->
+
+        <gmpx-api-loader key="AIzaSyDuCAKvHZRD0oratxAG5bBRZXAAhFzeIEM" solution-channel="GMP_GE_mapsandplacesautocomplete_v2">
+    </gmpx-api-loader>
+    <gmp-map center="40.749933,-73.98633" zoom="13" map-id="DEMO_MAP_ID">
+      <div slot="control-block-start-inline-start" class="place-picker-container">
+        <gmpx-place-picker placeholder="Enter an address"></gmpx-place-picker>
+      </div>
+      <gmp-advanced-marker></gmp-advanced-marker>
+    </gmp-map>
+        <!-- <p>Google Maps — API Key Required</p>
+        <p style="font-size:11px;color:#94a3b8;font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;">Replace YOUR_GOOGLE_MAPS_API_KEY in test.html</p> -->
       </div>
       <div class="map-aqi-strip">
         <div class="aqi-item"><div class="aqi-dot" style="background:#22c55e;"></div><span>Good (0–50)</span></div>
@@ -731,6 +740,8 @@
 </script>
 
 
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/@googlemaps/extended-component-library/0.6.11/index.min.js">
+    </script>
 <script type="module" src="./home.js"></script>
 </body>
 </html>
