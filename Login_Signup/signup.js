@@ -63,7 +63,7 @@ signupForm.addEventListener("submit", async (e) => {
       email,
       photoURL: user.photoURL || "",
       provider: "email",
-      passwordHash, // CHỈ lưu hash, không lưu pass thô
+      passwordHash, 
       createdAt: serverTimestamp()
     });
 
@@ -74,11 +74,11 @@ signupForm.addEventListener("submit", async (e) => {
   } catch (error) {
     console.error("Signup error:", error);
     if (error.code === "auth/email-already-in-use") {
-      alert("Email này đã được đăng ký hệ thống.");
+      alert("This email has already been registered in the system.");
     } else if (error.code === "auth/weak-password") {
-      alert("Mật khẩu quá yếu (yêu cầu ít nhất 6 ký tự).");
+      alert("Password is too weak (requires at least 6 characters).");
     } else {
-      alert(`Lỗi hệ thống: ${error.message}`);
+      alert(`System Error: ${error.message}`);
     }
   } finally {
     submitBtn.disabled = false;

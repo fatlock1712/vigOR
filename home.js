@@ -58,7 +58,7 @@ onAuthStateChanged(auth, (user) => {
 
 function forceLogout() {
     signOut(auth).then(() => {
-        alert("Phiên đăng nhập đã hết hạn sau 20 phút. Vui lòng đăng nhập lại!");
+        alert("Your login session has expired");
         window.location.assign("../Login and SignUp/login.html");
     }).catch((error) => {
         console.error("Lỗi tự động đăng xuất:", error);
