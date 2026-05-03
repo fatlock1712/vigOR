@@ -317,7 +317,7 @@
       <div class="badge"><div class="badge-dot"></div><span>Public Beta — Enrollment Open</span></div>
     </div>
     <h1 class="hero__title reveal d1">Hack Your Body's<br><span class="grad-txt">Operating System.</span></h1>
-    <p class="hero__sub reveal d2">vigOR is a health intelligence platform. Upload medical records, monitor air quality, and receive AI-powered health insights in real time.</p>
+    <p class="hero__sub reveal d2">vigOR is a health intelligence platform. Fill out medical records, monitor air quality, and receive AI-powered health insights in real time.</p>
    
     <div class="hero__stats reveal d4">
       <div><div class="hero__stat-num">128k+</div><div class="hero__stat-lbl">Active Nodes</div></div>
@@ -356,7 +356,7 @@
     <div class="how-step">
       <div class="how-step-n">02</div>
       <div class="how-step-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
-      <div class="how-step-t">Upload Your Records</div>
+      <div class="how-step-t">Fill out your records</div>
       <p class="how-step-d">Drag-drop any PDF or image. Our ML pipeline parses, redacts PII, and seals your vault. Fully automated.</p>
     </div>
     <div class="how-step">
@@ -430,17 +430,87 @@
         <div class="map-header-dot"></div>
         <span class="map-header-title">Air Quality — Live · Oregon, US</span>
       </div>
-      <div class="map-placeholder">
-        <!-- <div class="map-placeholder-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div> -->
 
-        <gmpx-api-loader key="AIzaSyDuCAKvHZRD0oratxAG5bBRZXAAhFzeIEM" solution-channel="GMP_GE_mapsandplacesautocomplete_v2">
-    </gmpx-api-loader>
-    <gmp-map center="40.749933,-73.98633" zoom="13" map-id="DEMO_MAP_ID">
-      <div slot="control-block-start-inline-start" class="place-picker-container">
-        <gmpx-place-picker placeholder="Enter an address"></gmpx-place-picker>
-      </div>
-      <gmp-advanced-marker></gmp-advanced-marker>
-    </gmp-map>
+        <!-- <div class="map-placeholder-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div> -->
+<section class="app-zone" id="feed">
+    <div class="app-zone__inner">
+        <header class="section-head section-head--light">
+            <span class="section-head__eyebrow">// 04 &mdash; live.health.feed</span>
+            <h2 class="section-head__title">
+                Air quality route console.<br>
+                <span class="section-head__title-accent">Original app functions integrated.</span>
+            </h2>
+        </header>
+
+        <div class="google-map-frame">
+            <div class="google-map-controls route-console-controls">
+                <div class="route-panel-title">
+                    <i class="fa-solid fa-route"></i>
+                    Smart Route Analyzer
+                </div>
+
+                <div class="route-input-row">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <input
+                        id="routeStartInput"
+                        type="text"
+                        placeholder="Starting point."
+                        autocomplete="off"
+                    >
+                    <button type="button" id="useCurrentLocationBtn" class="mini-location-btn">
+                        <i class="fa-solid fa-location-crosshairs"></i>
+                        Use current
+                    </button>
+                </div>
+
+                <div class="route-input-row">
+                    <i class="fa-solid fa-flag-checkered"></i>
+                    <input
+                        id="routeEndInput"
+                        type="text"
+                        placeholder="Destination."
+                        autocomplete="off"
+                    >
+                </div>
+
+                <div id="map-location-output">
+                    Choose starting point and destination, then analyze route.
+                </div>
+            </div>
+
+            <div id="google-map">
+                <div class="map-loading">
+                    Google Map loading... If it does not appear, replace YOUR_GOOGLE_MAPS_API_KEY with a real key.
+                </div>
+            </div>
+
+            <div class="route-ai-panel" id="routeAiPanel">
+                <div class="route-ai-head">
+                    <span><i class="fa-solid fa-robot"></i> Nemotron Route Analysis</span>
+                    <span id="routeVerdictBadge" class="route-verdict-badge">WAITING</span>
+                </div>
+
+                <div id="aiChatMessages" class="ai-chat-messages">
+                    <div class="ai-msg ai-msg-bot">
+                        Enter a start and destination. I will compare the route options using weather, air quality, pollen, and your asthma/allergy profile.
+                    </div>
+                </div>
+
+                <button type="button" id="acceptRiskBtn" class="accept-risk-btn">
+                    Accept Risk
+                </button>
+
+                <div class="ai-chat-input-row">
+                    <input id="aiChatInput" type="text" placeholder="Ask Nemotron about this route.">
+                    <button type="button" id="aiChatSendBtn">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
         <!-- <p>Google Maps — API Key Required</p>
         <p style="font-size:11px;color:#94a3b8;font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;">Replace YOUR_GOOGLE_MAPS_API_KEY in test.html</p> -->
       </div>
@@ -738,6 +808,878 @@
     if(e.key === 'Enter') sendChat();
   });
 </script>
+
+<script>
+const BACKEND_URL = 'http://127.0.0.1:5000';
+
+let googleMap;
+let currentLocationMarker;
+let startMarker;
+let destinationMarker;
+let infoWindow;
+let geocoder;
+let currentUserLocation = null;
+let routeStart = null;
+let routeDestination = null;
+let routePolylines = [];
+let latestRouteAnalysisContext = null;
+let selectedRouteId = null;
+let pendingData = {};
+let chatState = "idle";
+let routeResult = null;
+let global_result = null;
+
+function initGoogleMap() {
+    const mapElement = document.getElementById('google-map');
+
+    if (!mapElement) {
+        console.error('Google map container was not found.');
+        return;
+    }
+
+    const defaultLocation = { lat: 44.567, lng: -123.289 };
+
+    googleMap = new google.maps.Map(mapElement, {
+        center: defaultLocation,
+        zoom: 13,
+        mapTypeControl: true,
+        streetViewControl: true,
+        fullscreenControl: true
+    });
+
+    infoWindow = new google.maps.InfoWindow();
+    geocoder = new google.maps.Geocoder();
+
+    setupRouteSearchBoxes();
+    setupMapClick();
+    setupCurrentLocationButtons();
+    setupAiChatBox();
+}
+
+function setupRouteSearchBoxes() {
+    setupPlaceAutocomplete('routeStartInput', 'start');
+    setupPlaceAutocomplete('routeEndInput', 'destination');
+}
+
+function setupPlaceAutocomplete(inputId, role) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+
+    if (!google.maps.places) {
+        updateRouteStatus('Places API is not enabled. Search autocomplete is unavailable.');
+        return;
+    }
+
+    const autocomplete = new google.maps.places.Autocomplete(input, {
+        fields: ['formatted_address', 'geometry', 'name']
+    });
+
+    autocomplete.bindTo('bounds', googleMap);
+
+    autocomplete.addListener('place_changed', function () {
+        const place = autocomplete.getPlace();
+        if (!place.geometry || !place.geometry.location) {
+            alert('No location found for that search.');
+            return;
+        }
+
+        const point = {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng(),
+            address: place.formatted_address || place.name || 'Selected location'
+        };
+
+        if (role === 'start') setRouteStart(point, true);
+        else setRouteDestination(point, true);
+    });
+}
+
+function setupMapClick() {
+    googleMap.addListener('click', function (event) {
+        const point = {
+            lat: event.latLng.lat(),
+            lng: event.latLng.lng(),
+            address: 'Clicked location'
+        };
+
+        reverseGeocode(point.lat, point.lng, function (address) {
+            point.address = address || 'Clicked location';
+            setRouteDestination(point, true);
+        });
+    });
+}
+
+function setupCurrentLocationButtons() {
+    const mapBtn = document.getElementById('useCurrentLocationBtn');
+    if (mapBtn) mapBtn.addEventListener('click', requestCurrentLocation);
+
+    const cardBtn = document.getElementById('requestLocationCardBtn');
+    if (cardBtn) cardBtn.addEventListener('click', requestCurrentLocation);
+}
+
+
+/*              */
+
+/*               */
+function setupAiChatBox() {
+    const sendBtn = document.getElementById('aiChatSendBtn');
+    const input = document.getElementById('aiChatInput');
+    /* WIP: click + enter should be calling same function */
+if (sendBtn && input) {
+    sendBtn.addEventListener("click", async function () {
+        const message = input.value.trim();
+
+        if (message === "") return;
+
+        input.value = "";
+
+        await handleUserMessage(message);
+    });
+}
+
+if (input) {
+    input.addEventListener("keydown", async function (e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+
+            const message = input.value.trim();
+
+            if (message === "") return;
+
+            input.value = "";
+
+            await handleUserMessage(message);
+        }
+    });
+}
+
+    const acceptRiskBtn = document.getElementById('acceptRiskBtn');
+    if (acceptRiskBtn) {
+        acceptRiskBtn.addEventListener('click', function () {
+            appendChatMessage('user', 'I accept the risk for this route.');
+            appendChatMessage('bot', 'Risk accepted. Carry your rescue inhaler, avoid heavy traffic exposure when possible, and seek immediate medical help if symptoms worsen.');
+            acceptRiskBtn.style.display = 'none';
+        });
+    }
+}
+
+function requestCurrentLocation() {
+    if (!navigator.geolocation) {
+        updateRouteStatus('Geolocation is not supported by this browser.');
+        return;
+    }
+
+    updateRouteStatus('Requesting location permission...');
+
+    navigator.geolocation.getCurrentPosition(
+        function (position) {
+            const point = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+                address: 'Current location'
+            };
+
+            currentUserLocation = point;
+
+            reverseGeocode(point.lat, point.lng, function (address) {
+                point.address = address || 'Current location';
+                setRouteStart(point, true);
+
+                const startInput = document.getElementById('routeStartInput');
+                if (startInput) startInput.value = point.address;
+
+                updatePermissionCard(
+                    '<b>Location allowed:</b><br>' +
+                    point.lat.toFixed(6) + ', ' + point.lng.toFixed(6) +
+                    '<br>' + escapeHtml(point.address),
+                    true
+                );
+            });
+        },
+        function (error) {
+            if (error.code === error.PERMISSION_DENIED) {
+                updateRouteStatus('Location permission denied. You can still type a starting point manually.');
+                updatePermissionCard('Location permission denied. Please allow location in browser settings if you want alerts.');
+            } else {
+                updateRouteStatus('Could not get your location. Try again or type a starting point.');
+                updatePermissionCard('Could not get your location. Try again.');
+            }
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+}
+
+function setRouteStart(point, centerMap) {
+    routeStart = point;
+    if (centerMap && googleMap) {
+        googleMap.setCenter({ lat: point.lat, lng: point.lng });
+        googleMap.setZoom(14);
+    }
+
+    if (!startMarker) {
+        startMarker = new google.maps.Marker({
+            position: { lat: point.lat, lng: point.lng },
+            map: googleMap,
+            label: 'Start',
+            title: 'Starting point'
+        });
+    } else {
+        startMarker.setPosition({ lat: point.lat, lng: point.lng });
+    }
+
+    updateRouteStatus('Starting point set: ' + point.lat.toFixed(5) + ', ' + point.lng.toFixed(5));
+}
+
+function setRouteDestination(point, centerMap) {
+    routeDestination = point;
+    if (centerMap && googleMap) {
+        googleMap.setCenter({ lat: point.lat, lng: point.lng });
+        googleMap.setZoom(14);
+    }
+
+    if (!destinationMarker) {
+        destinationMarker = new google.maps.Marker({
+            position: { lat: point.lat, lng: point.lng },
+            map: googleMap,
+            label: 'End',
+            title: 'Destination'
+        });
+    } else {
+        destinationMarker.setPosition({ lat: point.lat, lng: point.lng });
+    }
+
+    const destinationInput = document.getElementById('routeEndInput');
+    if (destinationInput && point.address !== 'Clicked location') {
+        destinationInput.value = point.address;
+    }
+
+    updateRouteStatus('Destination set: ' + point.lat.toFixed(5) + ', ' + point.lng.toFixed(5));
+}
+
+async function analyzeRoutesWithBackend() {
+    const btn = document.getElementById('analyzeRouteBtn');
+    const startInput = document.getElementById('routeStartInput');
+    const endInput = document.getElementById('routeEndInput');
+
+    try {
+        if (!routeStart && startInput && startInput.value.trim()) {
+            routeStart = await geocodeAddress(startInput.value.trim());
+            setRouteStart(routeStart, false);
+        }
+
+        if (!routeDestination && endInput && endInput.value.trim()) {
+            routeDestination = await geocodeAddress(endInput.value.trim());
+            setRouteDestination(routeDestination, false);
+        }
+
+        if (!routeStart || !routeDestination) {
+            alert('Please choose both a starting point and destination.');
+            return;
+        }
+
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Analyzing.';
+        }
+
+        updateRouteStatus('Sending route data to backend...');
+        appendChatMessage('bot', 'Analyzing route alternatives with weather, air quality, pollen, and asthma risk context.');
+
+        const origin = [
+            routeStart.lat,
+            routeStart.lng
+        ];
+
+        const destination = [
+            routeDestination.lat,
+            routeDestination.lng
+        ];
+        const routeResult = await get_routes(
+            origin,
+            destination,
+            transport,
+            user_data
+        );
+
+        console.log("Received routeResult:", routeResult);
+
+        if (!routeResult) {
+            throw new Error("Backend returned no route data.");
+        }
+
+        if (routeResult.action === "Go") {
+            appendChatMessage("bot", "Route is safe enough to go.");
+            console.log("recommended polyline:", routeResult.recommended_polyline);
+if (Array.isArray(routeResult.unchosen_polylines)) {
+    routeResult.unchosen_polylines.forEach(function(polyline) {
+        decodeandDisplayRoute_bad(polyline);
+    });
+}
+
+if (routeResult.recommended_polyline) {
+    decodeandDisplayRoute(routeResult.recommended_polyline);
+}
+
+            return;
+        }
+
+        if (routeResult.action === "Wait") {
+            appendChatMessage("bot", "Route has risk. Waiting is recommended.");
+
+            if (routeResult.recommended_polyline) {
+                pendingRecommendedRoute = routeResult.recommended_polyline;
+            }
+
+            return;
+        }
+
+        appendChatMessage("bot", "Route analysis finished, but backend did not return Go/Wait.");
+
+    } catch (error) {
+        console.error(error);
+        updateRouteStatus('Error: ' + error.message);
+        appendChatMessage('bot', 'Error: ' + error.message);
+
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-brain"></i> Analyze safest route';
+        }
+    }
+}
+function drawBackendRoutes(routes, analysis) {
+    clearRoutePolylines();
+    const bounds = new google.maps.LatLngBounds();
+    const recommendedId = Number(analysis.recommended_route_id || 1);
+
+    routes.forEach(function (route) {
+        if (!route.recommended_polyline) return;
+
+        const path = google.maps.geometry.encoding.decodePath(route.recommended_polyline);
+        path.forEach(p => bounds.extend(p));
+
+        const isRecommended = Number(route.route_id) === recommendedId;
+        const polyline = new google.maps.Polyline({
+            path: path,
+            geodesic: true,
+            strokeColor: isRecommended ? '#00ff88' : '#ffae00',
+            strokeOpacity: isRecommended ? 0.95 : 0.55,
+            strokeWeight: isRecommended ? 7 : 5,
+            map: googleMap
+        });
+
+        polyline.addListener('click', function () {
+            selectedRouteId = route.route_id;
+            showSelectedRoute(route, analysis);
+        });
+
+        routePolylines.push(polyline);
+    });
+
+    if (!bounds.isEmpty()) {
+        googleMap.fitBounds(bounds, 80);
+    }
+}
+
+function showRouteAnalysis(analysis) {
+    const verdict = analysis.verdict || 'Caution';
+    updateVerdictBadge(verdict);
+
+    let html = '<b>Recommended Route:</b> Route ' + escapeHtml(String(analysis.recommended_route_id || 1)) + '<br>';
+    html += '<b>Verdict:</b> ' + escapeHtml(verdict) + '<br><br>';
+    html += escapeHtml(analysis.reasoning_summary || 'No reasoning summary returned.');
+
+    if (Array.isArray(analysis.warnings) && analysis.warnings.length) {
+        html += '<br><br><b>Warnings:</b><ul>';
+        analysis.warnings.forEach(w => html += '<li>' + escapeHtml(w) + '</li>');
+        html += '</ul>';
+    }
+
+    appendChatMessage('bot', html, true);
+
+    const acceptRiskBtn = document.getElementById('acceptRiskBtn');
+    if (acceptRiskBtn) {
+        acceptRiskBtn.style.display = (analysis.accept_risk_required || verdict === 'Caution' || verdict === 'Danger') ? 'block' : 'none';
+    }
+}
+
+function showSelectedRoute(route, analysis) {
+    const isRecommended = Number(route.route_id) === Number(analysis.recommended_route_id);
+    appendChatMessage(
+        'bot',
+        '<b>Selected:</b> Route ' + route.route_id + '<br>' +
+        (isRecommended ? 'This is the Nemotron recommended route.' : 'This is not the recommended route. Review the warnings before choosing it.'),
+        true
+    );
+
+    const acceptRiskBtn = document.getElementById('acceptRiskBtn');
+    if (acceptRiskBtn) acceptRiskBtn.style.display = isRecommended ? 'none' : 'block';
+}
+const user_data = {
+age: 30,
+asthma_severity: 2,
+allergy: "none",
+heart_condition: "none"
+};
+const transport = "walking";
+/* AAAAAAAAAA */
+async function general_response(userMessage) {
+  const response = await fetch("http://127.0.0.1:5000/api/general_response", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      user_prompt: userMessage,
+      chat_history: []
+    })
+  });
+  const text = await response.text();
+  console.log("BACKEND RAW RESPONSE:", text);
+
+  if (!response.ok) {
+    throw new Error("Backend response failed: " + text);
+  }
+
+  const data = JSON.parse(text);
+  console.log(data);
+  
+  return data.action;
+}
+
+async function GO_respond_user(recommended_route_id, verdict, medical_logic, reasoning_summary, warnings) {
+  const response = await fetch("http://127.0.0.1:5000/api/GO_respond_user", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      recommended_route_id: recommended_route_id,
+      verdict: verdict,
+      medical_logic: medical_logic,
+      reasoning_summary: reasoning_summary,
+      warnings: warnings
+    })
+  });
+
+  const text = await response.text();
+  console.log("GO_respond_user RAW RESPONSE:", text);
+
+  if (!response.ok) {
+    throw new Error("GO_respond_user failed: " + text);
+  }
+
+  const data = JSON.parse(text);
+  console.log(data);
+  return data.message || data.data;
+}
+
+async function WAIT_respond_user(medical_logic, reasoning_summary, warnings, suggestion) {
+  const response = await fetch("http://127.0.0.1:5000/api/WAIT_respond_user", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      medical_logic: medical_logic,
+      reasoning_summary: reasoning_summary,
+      warnings: warnings,
+      suggestion: suggestion
+    })
+  });
+
+  const text = await response.text();
+  console.log("WAIT_respond_user RAW RESPONSE:", text);
+
+  if (!response.ok) {
+    throw new Error("WAIT_respond_user failed: " + text);
+  }
+
+  const data = JSON.parse(text);
+  console.log(data);
+  return data.message || data.data;
+}
+
+async function asking_response(user_prompt) {
+  const response = await fetch("http://127.0.0.1:5000/api/asking_response", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      user_prompt: user_prompt
+    })
+  });
+
+  const text = await response.text();
+  console.log("asking_response RAW RESPONSE:", text);
+
+  if (!response.ok) {
+    throw new Error("asking_response failed: " + text);
+  }
+
+  const data = JSON.parse(text);
+  console.log(data);
+  return data.decision;
+}
+
+async function get_env_forecast(latitude, longitude, user_data) {
+  const response = await fetch("http://127.0.0.1:5000/api/get_env_forecast", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      latitude: latitude,
+      longitude: longitude,
+      user_data: user_data
+    })
+  });
+
+  const text = await response.text();
+  console.log("get_env_forecast RAW RESPONSE:", text);
+
+  if (!response.ok) {
+    throw new Error("get_env_forecast failed: " + text);
+  }
+
+  const data = JSON.parse(text);
+  console.log(data);
+  return data.message || data.data;
+}
+
+async function get_routes(origin, destination, transport, user_data) {
+  const response = await fetch("http://127.0.0.1:5000/api/get_routes", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      origin: origin,
+      destination: destination,
+      transport: transport,
+      user_data: user_data
+    })
+  });
+
+  const text = await response.text();
+  console.log("get_routes RAW RESPONSE:", text);
+
+  if (!response.ok) {
+    throw new Error("get_routes failed: " + text);
+  }
+
+  const data = JSON.parse(text);
+  console.log(data);
+  return data.data;
+}
+/* AAAAAAAAAA */
+    // STATE 1: normal chat
+async function handleUserMessage(message) {
+    appendChatMessage("user", message);
+
+    // STATE 1: normal chat
+    if (chatState === "idle") {
+        const answer1 = await general_response(message);
+
+        console.log("general_response:", answer1);
+
+        if (answer1 === "find_route") {
+            if (!routeStart || !routeDestination) {
+                appendChatMessage("bot", "Please add both a Start marker and an End marker on the map first.");
+                return;
+            }
+
+            appendChatMessage("bot", "Got it. I will analyze the route now.");
+
+            const origin = [
+                routeStart.lat,
+                routeStart.lng
+            ];
+
+            const destination = [
+                routeDestination.lat,
+                routeDestination.lng
+            ];
+            console.log("routeStart:", routeStart);
+console.log("routeDestination:", routeDestination);
+console.log("origin array:", origin);
+console.log("destination array:", destination);
+console.log("transport:", transport);
+            const routeResult = await get_routes(
+    origin,
+    destination,
+    transport,
+    user_data
+);
+
+console.log("Full routeResult:", routeResult);
+
+
+
+const routeData = routeResult.data || routeResult; // Adjust based on actual backend response structure
+console.log("Received routes from backend:", routeData);
+
+if (routeData.action === "Go") {
+    console.log("routeData.recommended_polyline:", routeData.recommended_polyline);
+
+    
+
+    const goMessage = await GO_respond_user(
+        routeData.recommended_route_id,
+        routeData.verdict,
+        routeData.medical_logic,
+        routeData.reasoning_summary,
+        routeData.warnings
+    );
+
+    appendChatMessage("bot", goMessage);
+    decodeandDisplayRoute(routeData.recommended_polyline);
+    return;
+}
+
+if (routeData.action === "Wait") {
+    pendingRecommendedRoute = routeData.recommended_polyline;
+
+    const waitMessage = await WAIT_respond_user(
+        routeData.medical_logic,
+        routeData.reasoning_summary,
+        routeData.warnings,
+        routeData.suggestion
+    );
+
+    appendChatMessage("bot", waitMessage);
+    appendChatMessage("bot", "Do you accept the risk and want to continue anyway? Please answer yes or no.");
+
+    chatState = "waiting_risk_answer";
+    return;
+}
+
+appendChatMessage("bot", "Route analysis complete, but no valid action was returned.");
+return;
+        }
+
+        const followUp = await asking_response(message);
+        console.log("asking_response:", followUp);
+
+        if (followUp) {
+            appendChatMessage("bot", followUp);
+        } else {
+            appendChatMessage("bot", "Sorry, I don't have an answer for that.");
+        }
+    } else if (chatState === "waiting_risk_answer") {
+        const userAnswer = message.toLowerCase();
+        if (userAnswer === "yes" || userAnswer === "y") {
+            appendChatMessage("bot", "Risk accepted. Carry your rescue inhaler, avoid heavy traffic exposure when possible, and seek immediate medical help if symptoms worsen.");
+
+            if (pendingRecommendedRoute) {
+                decodeandDisplayRoute(pendingRecommendedRoute);
+                pendingRecommendedRoute = null;
+            }
+        } else {
+            appendChatMessage("bot", "Risk not accepted. Please consider adjusting your route or waiting for better conditions.");
+        }
+
+        chatState = "idle";
+    }
+}
+
+function appendChatMessage(sender, content, asHtml = false) {
+    const box = document.getElementById('aiChatMessages');
+    if (!box) return;
+
+    const msg = document.createElement('div');
+    msg.className = sender === 'user' ? 'ai-msg ai-msg-user' : 'ai-msg ai-msg-bot';
+    if (asHtml) msg.innerHTML = content;
+    else msg.textContent = content;
+
+    box.appendChild(msg);
+    box.scrollTop = box.scrollHeight;
+}
+let map;
+let currentRouteLine = null;
+
+function decodeandDisplayRoute(encodedPolyline) {
+    if (!encodedPolyline) {
+        console.error("No encoded polyline received.");
+        return;
+    }
+
+    if (!googleMap) {
+        console.error("Google Map is not initialized yet.");
+        return;
+    }
+
+    if (!google.maps.geometry || !google.maps.geometry.encoding) {
+        console.error("Google Maps geometry library is not loaded.");
+        return;
+    }
+
+    const path = google.maps.geometry.encoding.decodePath(encodedPolyline);
+
+    console.log("Decoded route path:", path);
+
+    const routeLine = new google.maps.Polyline({
+        path: path,
+        geodesic: true,
+        strokeColor: "#00ff88",
+        strokeOpacity: 0.95,
+        strokeWeight: 7,
+        map: googleMap
+    });
+
+    const bounds = new google.maps.LatLngBounds();
+
+    path.forEach(function (point) {
+        bounds.extend(point);
+    });
+
+    googleMap.fitBounds(bounds);
+}
+/* unchosen route */
+function decodeandDisplayRoute_bad(encodedPolyline) {
+    if (!encodedPolyline) {
+        console.error("No encoded polyline received for bad route.");
+        return;
+    }
+
+    if (!googleMap) {
+        console.error("Google Map is not initialized yet.");
+        return;
+    }
+
+    if (!google.maps.geometry || !google.maps.geometry.encoding) {
+        console.error("Google Maps geometry library is not loaded.");
+        return;
+    }
+
+    const path = google.maps.geometry.encoding.decodePath(encodedPolyline);
+
+    console.log("Decoded unchosen route path:", path);
+
+    const badRouteLine = new google.maps.Polyline({
+        path: path,
+        geodesic: true,
+        strokeColor: "#808080",
+        strokeOpacity: 0.55,
+        strokeWeight: 5,
+        map: googleMap
+    });
+
+    return badRouteLine;
+}
+
+function updateVerdictBadge(verdict) {
+    const badge = document.getElementById('routeVerdictBadge');
+    if (!badge) return;
+
+    badge.textContent = verdict;
+    badge.className = 'route-verdict-badge verdict-' + String(verdict).toLowerCase();
+}
+
+function updateRouteStatus(message) {
+    const output = document.getElementById('map-location-output');
+    if (output) output.textContent = message;
+}
+
+function updatePermissionCard(message, asHtml = false) {
+    const cardOutput = document.getElementById('permissionLocationStatus');
+    if (!cardOutput) return;
+    if (asHtml) cardOutput.innerHTML = message;
+    else cardOutput.textContent = message;
+}
+
+function reverseGeocode(lat, lng, callback) {
+    if (!geocoder) {
+        callback(null);
+        return;
+    }
+
+    geocoder.geocode({ location: { lat: lat, lng: lng } }, function (results, status) {
+        if (status === 'OK' && results[0]) callback(results[0].formatted_address);
+        else callback(null);
+    });
+}
+
+function geocodeAddress(address) {
+    return new Promise(function (resolve, reject) {
+        if (!geocoder) {
+            reject(new Error('Geocoder is not ready.'));
+            return;
+        }
+
+        geocoder.geocode({ address: address }, function (results, status) {
+            if (status === 'OK' && results[0]) {
+                const loc = results[0].geometry.location;
+                resolve({
+                    lat: loc.lat(),
+                    lng: loc.lng(),
+                    address: results[0].formatted_address
+                });
+            } else {
+                reject(new Error('Could not geocode: ' + address));
+            }
+        });
+    });
+}
+
+function clearRoutePolylines() {
+    routePolylines.forEach(p => p.setMap(null));
+    routePolylines = [];
+
+function encodedpolyline(encodedpolyline) {
+    if(!googleMap){
+        console.error('GOOGLE MAPS NOT DONE');
+        return;
+    }
+}
+
+clearRoutePolylines();
+    const path = google.maps.geometry.encoding.decodePath(encodedpolyline);
+    const polyline = new google.maps.Polyline({
+        path: path,
+        geodesic: true,
+        sttrokeColor: '#00ff88',
+        strokeOpacity: 0.95,
+        strokeWeight: 7,
+        map: googleMap
+    });
+
+    routePolylines.push(polyline);
+
+    const bounds = new google.maps.LatLngBounds();
+    path.forEach(point => bounds.extend(point));
+    googleMap.fitBounds(bounds);
+
+    console.log('Decoded path:', path.map(point => ({
+        lat: point.lat(),
+        lng: point.lng()
+    })));
+}
+
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+window.gm_authFailure = function () {
+    const mapElement = document.getElementById('google-map');
+    const output = document.getElementById('map-location-output');
+    const message = 'Google Maps failed to load. Replace YOUR_GOOGLE_MAPS_API_KEY with a valid key and enable Maps JavaScript API, Places API, and Geocoding API.';
+    if (mapElement) mapElement.innerHTML = '<div class="map-loading">' + message + '</div>';
+    if (output) output.textContent = message;
+};
+
+window.initGoogleMap = initGoogleMap;
+</script>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCutXQ0Qw-a0wT4lZ76lAYP3AR6I5Cj634&libraries=places,geometry&callback=initGoogleMap"></script>
+
+
 
 
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/@googlemaps/extended-component-library/0.6.11/index.min.js">
