@@ -853,7 +853,7 @@ if __name__ == '__main__':
   "warnings": ["Slightly elevated PM2.5"]
 }
 
-->
+
 
 {
   "status": "success",
@@ -869,7 +869,7 @@ if __name__ == '__main__':
   "suggestion": ["a nearby library", "an indoor cafe with AC"]
 }
 
-->
+
 
 {
   "status": "success",
@@ -881,7 +881,6 @@ if __name__ == '__main__':
   "user_prompt": "Yeah, I really need to get home, I will risk it."
 }
 
-->
 
 {
   "status": "success",
@@ -901,7 +900,7 @@ if __name__ == '__main__':
   }
 }
 
-->
+
 
 {
   "status": "success",
