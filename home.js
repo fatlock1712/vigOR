@@ -40,7 +40,7 @@ onAuthStateChanged(auth, (user) => {
                 forceLogout();
             }, remainingTime);
             
-            console.log(`Phiên đăng nhập còn lại: ${Math.floor(remainingTime / 60000)} phút.`);
+            console.log(`Your remaining time: ${Math.floor(remainingTime / 60000)} minutes.`);
         }
 
     } else {
@@ -58,7 +58,7 @@ onAuthStateChanged(auth, (user) => {
 function forceLogout() {
     signOut(auth).then(() => {
         alert("Your login session has expired");
-        window.location.assign("../Login and SignUp/login.html");
+        window.location.assign("../Login_SignUp/login.html");
     }).catch((error) => {
         console.error("Lỗi tự động đăng xuất:", error);
     });
@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         logoutBtn.addEventListener('click', () => {
             signOut(auth).then(() => {
                 alert("You're sign out");
+                window.location.assign("../Login_SignUp/login.html");
             }).catch(console.error);
         });
     }

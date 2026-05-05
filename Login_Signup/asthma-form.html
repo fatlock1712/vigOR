@@ -25,7 +25,8 @@
            placeholder="Ex: 2000" 
            maxlength="4"
            oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-
+    
+  </div>
 
   <!-- Dị ứng -->
   <div class="field">
@@ -41,12 +42,12 @@
         <input type="checkbox" name="allergy" value="Weed"> <span class="chip-label">🌾 Weed</span>
       </label>
     </div>
-    <div class="hint">Choose one or more (if have)</div>
+    <div class="hint">Choose an option (if applicable)</div>
   </div>
 
   <!-- Độ nghiêm trọng -->
   <div class="field">
-    <div class="label"> asthma level <span class="req">*</span></div>
+    <div class="label"> Asthma level <span class="req">*</span></div>
     <div class="severity-row">
       <div style="display:flex;align-items:center;gap:12px">
         <input type="range" id="severity" min="0" max="4" value="2" step="1" oninput="updateSeverity(this.value)">
@@ -80,7 +81,7 @@
           <div class="opt-desc">Prior history of heart disease.</div>
         </div>
       </label>
-        <div class="hint">When the heart is weakened, it cannot pump as effectively to maintain oxygenmnn levels during an asthma attack.</div>
+        <div class="hint">When the heart is weakened, it cannot pump as effectively to maintain oxygen levels during an asthma attack.</div>
     </div>
   </div>
 

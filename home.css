@@ -1054,3 +1054,58 @@ footer{background:var(--fg);padding:56px clamp(20px,5vw,72px) 28px;}
 .foot-member-role{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.08em;color:rgba(255,255,255,0.28);text-transform:uppercase;margin-top:2px;}
 .foot-member-li{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:#4D7CFF;opacity:0.75;transition:opacity 0.15s;}
 .foot-member-li:hover{opacity:1;}   
+
+/* Shrink the entire map control panel overlay */
+    .google-map-controls.route-console-controls {
+        max-width: 340px !important; /* Stops the box from stretching across the map */
+        width: 100%;                 /* Keeps it responsive on smaller screens */
+        padding: 16px !important;    /* Makes the internal spacing tighter */
+        border-radius: 12px;         /* Ensures the corners match your theme */
+    }
+    
+    /* Optional: Ensure the inputs inside stretch neatly to fit the new smaller box */
+    .route-input-row {
+        display: flex;
+        flex-wrap: wrap; /* Allows the button to drop below if it's too tight */
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+    /* 1. Reset the main container to stack items vertically */
+    .google-map-frame {
+        display: flex !important;
+        flex-direction: column !important;
+        height: auto !important; 
+        position: relative !important;
+    }
+
+    /* 2. Give the map a solid height so it doesn't collapse */
+    #google-map {
+        position: relative !important;
+        height: 500px !important; /* Adjust this to make the map taller/shorter */
+        width: 100% !important;
+        border-radius: 12px;
+    }
+
+    /* 3. Keep the Search Box floating neatly over the top-left of the map */
+    .google-map-controls.route-console-controls {
+        position: absolute !important;
+        top: 16px !important;
+        left: 16px !important;
+        z-index: 10 !important;
+        max-width: 340px !important;
+        width: 100% !important;
+    }
+
+    /* 4. Force the AI Chat box to sit naturally below the map */
+    .route-ai-panel {
+        position: relative !important;
+        top: initial !important;
+        bottom: initial !important;
+        left: initial !important;
+        right: initial !important;
+        transform: none !important;
+        width: 100% !important;
+        margin-top: 20px !important; /* Space between map and chat */
+        z-index: 1 !important;
+        border-radius: 12px;
+    }

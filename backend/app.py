@@ -1,10 +1,8 @@
-import os
-from dotenv import load_dotenv
-load_dotenv()
 
-API_KEY = os.getenv("GOOGLE_API_KEY")
-CF_API_KEY = os.getenv("CF_API_TOKEN") 
-CF_ACCOUNT_ID = os.getenv("CF_ACCOUNT_ID")
+
+API_KEY = 
+CF_API_KEY = 
+CF_ACCOUNT_ID = 
 
 
 from flask import Flask, request, jsonify, render_template
@@ -18,7 +16,7 @@ import json
 
 ##########################Functions#######################################
 
-def get_env_data(latitude, longitude, api_key = "AIzaSyCutXQ0Qw-a0wT4lZ76lAYP3AR6I5Cj634"):
+def get_env_data(latitude, longitude, API_KEY ):
     env_data = {'temp': 0, 'humidity': 0, 'wind_speed': 0, 'pm25': 0, 'pm10': 0, 'no2': 0, 'o3': 0, 'tree_pollen': 0, 'weed_pollen': 0, 'grass_pollen': 0}
     headers = {"User-Agent": "vigOR (phatloc17122007@gmail.com)"}
     try:
@@ -35,7 +33,7 @@ def get_env_data(latitude, longitude, api_key = "AIzaSyCutXQ0Qw-a0wT4lZ76lAYP3AR
 
 
 
-    aqi_url = f"https://airquality.googleapis.com/v1/currentConditions:lookup?key={api_key}"
+    aqi_url = f"https://airquality.googleapis.com/v1/currentConditions:lookup?key={API_KEY}"
     try:
         aqi_response = requests.post(aqi_url, json={"location": {"latitude": latitude, "longitude": longitude}, "extraComputations": ["POLLUTANT_CONCENTRATION"]}, timeout=3)
         if 'pollutants' in aqi_response.json():

@@ -49,6 +49,7 @@ input[type="number"]:focus,input[type="text"]:focus,textarea:focus,select:focus{
 }
 input::placeholder,textarea::placeholder{color:#ccc}
 
+
 /* Age + unit row */
 .age-row{display:flex;align-items:center;gap:10px}
 .age-row input{max-width:110px}
