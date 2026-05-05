@@ -45,18 +45,9 @@ We pushed beyond our classroom knowledge to learn using many new technologies, t
   * How to use Flask to connect Python to HTML.
   * How to access a Database from HTML.
   * How to prompt engineer to make Nemotron act as a medical route analyst.
-* **Alex: - WIP**
-  *
-  * 
-  *
-* **Brian - WIP**
-  *
-  * 
-  *
-* **Kalvin: - WIP**
-  *
-  * 
-  *
+* **Alex: - Frontend**
+* **Brian - Frontend**
+* **Kalvin: - Frontend**
 ## 🔮 What's next for vigOR
 _Mobile Deployment:_ Transforming the web platform into a native app for real-time, on-the-go GPS alerts.
 
