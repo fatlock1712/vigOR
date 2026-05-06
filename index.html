@@ -265,6 +265,32 @@
       .hero__ctas .btn{width:100%;}
       .goal-card{flex-direction:column;gap:12px;}
     }
+
+    /* User-provided Google Maps API key */
+    .maps-key-modal-overlay{
+      position:fixed;inset:0;background:rgba(15,23,42,0.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+      z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s ease;
+    }
+    .maps-key-modal-overlay.is-open{opacity:1;pointer-events:auto;}
+    .maps-key-modal{
+      width:min(420px,100%);background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;
+      box-shadow:0 20px 48px rgba(0,0,0,0.14);
+    }
+    .maps-key-modal h3{font-family:var(--f-d);font-size:18px;margin-bottom:8px;color:var(--fg);}
+    .maps-key-modal p{font-size:13px;color:var(--muted-fg);line-height:1.6;margin-bottom:14px;}
+    .maps-key-modal label{display:block;font-size:11px;font-family:var(--f-m);letter-spacing:.08em;text-transform:uppercase;color:var(--muted-fg);margin-bottom:8px;}
+    .maps-key-modal input{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:10px;font:13px/1 var(--f-b);background:var(--muted);outline:none;margin-bottom:12px;}
+    .maps-key-modal input:focus{border-color:var(--accent);background:#fff;}
+    .maps-key-modal-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;}
+    .maps-key-hint{font-size:11px;color:var(--muted-fg);font-family:var(--f-m);margin-top:10px;line-height:1.5;}
+    .maps-key-banner{display:flex;align-items:flex-start;gap:10px;padding:14px;border-radius:12px;background:rgba(0,82,255,0.06);border:1px solid rgba(0,82,255,0.2);}
+    .maps-key-banner strong{font-size:13px;display:block;color:var(--fg);margin-bottom:4px;}
+    .maps-key-banner p{font-size:12px;color:var(--muted-fg);line-height:1.55;margin:0;}
+    .maps-key-placeholder{padding:clamp(28px,4vw,40px);text-align:center;max-width:360px;margin:0 auto;}
+    #openMapsKeyBtn{font-size:12px!important;padding:8px 12px!important;}
+    .vigor-ai-wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+    .vigor-ai-select{font:inherit;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--fg);cursor:pointer;max-width:160px;}
+    #localAiStatus{font-size:11px;color:var(--muted-fg);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--f-m);}
 </style>
 
 <!-- NAV -->
@@ -278,6 +304,14 @@
     <li><a href="about.html">About Us</a></li>
   </ul>
 <div class="nav__actions">
+    <div class="vigor-ai-wrap">
+      <select id="vigorAiBackendSelect" class="vigor-ai-select" title="Runs LLM in your browser (MLC WebGPU) or Python server">
+        <option value="webgpu">AI: This device</option>
+        <option value="server">AI: Flask server</option>
+      </select>
+      <span id="localAiStatus" aria-live="polite"></span>
+    </div>
+    <button type="button" id="openMapsKeyBtn" class="nav-ghost">Maps API key</button>
     <a href="../Login_Signup/signup.html" id="sign-in-btn">
         <button class="nav-ghost">Sign In</button>
     </a>
@@ -301,6 +335,22 @@
     </div>
 </div>
 </nav>
+
+<!-- User Google Maps API key (BYOK); stored only in this browser -->
+<div id="mapsKeyModalOverlay" class="maps-key-modal-overlay" aria-hidden="true">
+  <div class="maps-key-modal" role="dialog" aria-modal="true" aria-labelledby="mapsKeyModalTitle" tabindex="-1">
+    <h3 id="mapsKeyModalTitle">Google Maps API key</h3>
+    <p>Type a key from your Google Cloud project. Maps, Places autocomplete, and Geocoding charges apply to your account — vigOR does not ship a shared key.</p>
+    <label for="mapsKeyInput">Maps JavaScript API key</label>
+    <input id="mapsKeyInput" type="password" autocomplete="off" spellcheck="false" placeholder="AIza...">
+    <p class="maps-key-hint">Enable: Maps JavaScript API, Places API, Geocoding API. Restrict the key by HTTP referrer for your deployed domain.</p>
+    <div class="maps-key-modal-actions">
+      <button type="button" id="mapsKeySaveBtn" class="btn btn-primary btn-lg">Save &amp; load map</button>
+      <button type="button" id="mapsKeyClearBtn" class="btn btn-outline btn-lg">Remove key</button>
+      <button type="button" id="mapsKeyCancelBtn" class="btn btn-outline btn-lg">Cancel</button>
+    </div>
+  </div>
+</div>
 
 <!-- ═══ HERO ═══ -->
 <section class="hero" id="hero">
@@ -362,7 +412,7 @@
   <div class="sec-center">
     <div class="sec-label reveal"><div class="badge" style="margin:0 auto;"><div class="badge-dot"></div><span>Live Intelligence</span></div></div>
     <h2 class="sec-title reveal d1">Your city's air. <span class="grad-txt">Your AI companion.</span></h2>
-    <p class="sec-sub reveal d2">Real-time air quality map powered by live sensor data, paired with Nemtron  — your 24/7 health AI.</p>
+    <p class="sec-sub reveal d2">Real-time routing with Maps + Open-Meteo signals. Pick <strong>AI: This device</strong> in the nav to run an MLC <strong>Phi-3 Mini 4B</strong> model in your browser (WebGPU)—no Flask or Cloudflare bill—or use Flask for parity with your Python stack.</p>
   </div>
 <section class="app-zone" id="feed">
     <div class="app-zone__inner">
@@ -410,7 +460,7 @@
 
             <div id="google-map">
                 <div class="map-loading">
-                    Google Map loading... If it does not appear, replace YOUR_GOOGLE_MAPS_API_KEY with a real key.
+                    Loading map… Enter your Google Maps API key via <strong>Maps API key</strong> in the top bar so routing uses your own billing quota.
                 </div>
             </div>
 
@@ -693,7 +743,150 @@ let chatState = "idle";
 let routeResult = null;
 let global_result = null;
 
+const VIGOR_MAPS_KEY_STORAGE = 'vigor_google_maps_api_key';
+let vigorGoogleMapsScriptLoading = false;
+let vigorMapsCoreInitialized = false;
+
+function getSavedGoogleMapsApiKey() {
+    try {
+        return (localStorage.getItem(VIGOR_MAPS_KEY_STORAGE) || '').trim();
+    } catch (err) {
+        return '';
+    }
+}
+
+function setSavedGoogleMapsApiKey(key) {
+    localStorage.setItem(VIGOR_MAPS_KEY_STORAGE, key.trim());
+}
+
+function clearSavedGoogleMapsApiKey() {
+    localStorage.removeItem(VIGOR_MAPS_KEY_STORAGE);
+}
+
+const VIGOR_AI_BACKEND_KEY = 'vigor_ai_backend';
+
+function getEffectiveAiBackend() {
+    try {
+        var saved = localStorage.getItem(VIGOR_AI_BACKEND_KEY);
+        if (saved === 'server' || saved === 'webgpu') {
+            return saved;
+        }
+    } catch (ignore) {}
+    return navigator.gpu ? 'webgpu' : 'server';
+}
+
+function syncAiBackendSelectUi() {
+    var sel = document.getElementById('vigorAiBackendSelect');
+    if (!sel) {
+        return;
+    }
+    sel.value = getEffectiveAiBackend();
+    var wgOpt = sel.querySelector('option[value=\"webgpu\"]');
+    if (wgOpt) {
+        wgOpt.disabled = !navigator.gpu;
+    }
+}
+
+function reportLocalAiProgress(p) {
+    var el = document.getElementById('localAiStatus');
+    if (!el) {
+        return;
+    }
+    if (p == null) {
+        el.textContent = '';
+        return;
+    }
+    if (typeof p === 'string') {
+        el.textContent = p.slice(0, 120);
+        return;
+    }
+    if (p.text) {
+        el.textContent = String(p.text).slice(0, 120);
+        return;
+    }
+    if (typeof p.progress === 'number') {
+        el.textContent = 'Model load ' + Math.round(p.progress * 100) + '%';
+        return;
+    }
+    el.textContent = 'Working…';
+}
+
+function renderMapsKeyPlaceholder(extraMessage) {
+    const mapElement = document.getElementById('google-map');
+    if (!mapElement) return;
+    var msgHtml = '';
+    if (extraMessage) {
+        msgHtml = '<p style="margin-top:14px;font-size:13px;color:#b91c1c;">' + escapeHtml(extraMessage) + '</p>';
+    }
+    mapElement.innerHTML =
+        '<div class="maps-key-placeholder map-loading">' +
+        '<div class="maps-key-banner">' +
+        '<div><strong>Bring your own Google Maps API key</strong>' +
+        '<p style="margin:6px 0 0;line-height:1.55;font-size:12px;color:var(--muted-fg);">Routes, autocomplete, and geocoding use <em>your</em> Google Cloud quota — vigOR never embeds a developer Maps key.</p></div>' +
+        '</div>' +
+        '<p style="margin:18px 0 14px;font-size:13px;color:var(--muted-fg);line-height:1.6;">Open <strong>Maps API key</strong> in the top bar and paste your key. Enable Maps JavaScript API, Places API, and Geocoding API for that project.</p>' +
+        '<button type="button" id="mapsKeyBannerBtn" class="btn btn-primary btn-lg">Add Google Maps API key</button>' +
+        msgHtml +
+        '</div>';
+}
+
+function injectGoogleMapsJs(apiKey) {
+    if (vigorGoogleMapsScriptLoading) return;
+    const existing = document.querySelector('script[data-vigor-google-maps=\"1\"]');
+    if (existing) existing.remove();
+    vigorGoogleMapsScriptLoading = true;
+    window.initGoogleMap = initGoogleMap;
+    const script = document.createElement('script');
+    script.async = true;
+    script.defer = true;
+    script.dataset.vigorGoogleMaps = '1';
+    script.src = 'https://maps.googleapis.com/maps/api/js?key=' + encodeURIComponent(apiKey) +
+        '&libraries=places,geometry&v=weekly&callback=initGoogleMap';
+    script.onerror = function () {
+        vigorGoogleMapsScriptLoading = false;
+        vigorMapsCoreInitialized = false;
+        clearSavedGoogleMapsApiKey();
+        renderMapsKeyPlaceholder('Could not load Google Maps. Check your key and API/enabled services.');
+    };
+    document.head.appendChild(script);
+}
+
+function openMapsApiKeyModal() {
+    const overlay = document.getElementById('mapsKeyModalOverlay');
+    const input = document.getElementById('mapsKeyInput');
+    if (!overlay) return;
+    overlay.classList.add('is-open');
+    overlay.setAttribute('aria-hidden', 'false');
+    if (input) {
+        input.value = getSavedGoogleMapsApiKey();
+        setTimeout(function () { input.focus(); }, 50);
+    }
+}
+
+function closeMapsApiKeyModal() {
+    var overlay = document.getElementById('mapsKeyModalOverlay');
+    if (!overlay) return;
+    overlay.classList.remove('is-open');
+    overlay.setAttribute('aria-hidden', 'true');
+}
+
+function startGoogleMapsWhenReady() {
+    const mapEl = document.getElementById('google-map');
+    if (!mapEl) return;
+    var key = getSavedGoogleMapsApiKey();
+    if (!key) {
+        renderMapsKeyPlaceholder();
+        return;
+    }
+    mapEl.innerHTML = '<div class="map-loading">Loading Google Maps…</div>';
+    injectGoogleMapsJs(key);
+}
+
 function initGoogleMap() {
+    vigorGoogleMapsScriptLoading = false;
+    if (vigorMapsCoreInitialized) return;
+    vigorMapsCoreInitialized = true;
+
     const mapElement = document.getElementById('google-map');
 
     if (!mapElement) {
@@ -722,6 +915,44 @@ function initGoogleMap() {
     setupAiChatBox();
 
     setupTransportSelector();
+
+    window.__vigorFetchDirectionRoutes = function (origin, destination, transport) {
+        return new Promise(function (resolve, reject) {
+            if (!window.google || !google.maps || !google.maps.DirectionsService) {
+                reject(new Error('Google Maps Directions not available'));
+                return;
+            }
+            if (!google.maps.geometry || !google.maps.geometry.encoding) {
+                reject(new Error('Maps geometry library not loaded'));
+                return;
+            }
+            var svc = new google.maps.DirectionsService();
+            var modeMap = {
+                walking: google.maps.TravelMode.WALKING,
+                driving: google.maps.TravelMode.DRIVING,
+                biking: google.maps.TravelMode.BICYCLING
+            };
+            var tm = modeMap[String(transport || 'walking').toLowerCase()] || google.maps.TravelMode.WALKING;
+            svc.route({
+                origin: new google.maps.LatLng(origin[0], origin[1]),
+                destination: new google.maps.LatLng(destination[0], destination[1]),
+                travelMode: tm,
+                provideRouteAlternatives: true
+            }, function (result, status) {
+                if (status !== 'OK' || !result.routes || !result.routes.length) {
+                    reject(new Error('Directions failed: ' + status));
+                    return;
+                }
+                var list = result.routes.map(function (route, idx) {
+                    return {
+                        route_id: idx + 1,
+                        encodedPolyline: google.maps.geometry.encoding.encodePath(route.overview_path)
+                    };
+                });
+                resolve(list);
+            });
+        });
+    };
 
 }
 
@@ -1131,154 +1362,173 @@ function getUserHealthDataForRoutes() {
 
 
 /* AAAAAAAAAA */
-async function general_response(userMessage) {
-  const response = await fetch("http://127.0.0.1:5000/api/general_response", {
+const NEMOTRON_MODEL_ID = "Nemotron-Mini-4B-Instruct-Q4_K_M";
+let localModelLoadPromise = null;
+
+function isNativeLocalAIAvailable() {
+  return Boolean(
+    window.Capacitor &&
+    typeof window.Capacitor.isNativePlatform === "function" &&
+    window.Capacitor.isNativePlatform() &&
+    window.Capacitor.Plugins &&
+    window.Capacitor.Plugins.LocalAI
+  );
+}
+
+function safeJsonParse(text) {
+  try {
+    return JSON.parse(text);
+  } catch (_) {
+    return null;
+  }
+}
+
+function extractFirstJsonObject(text) {
+  const fencedMatch = text.match(/```json\s*([\s\S]*?)```/i);
+  if (fencedMatch && fencedMatch[1]) {
+    const parsedFenced = safeJsonParse(fencedMatch[1].trim());
+    if (parsedFenced) return parsedFenced;
+  }
+
+  const objectMatch = text.match(/\{[\s\S]*\}/);
+  if (!objectMatch) return null;
+  return safeJsonParse(objectMatch[0]);
+}
+
+async function ensureNativeModelLoaded() {
+  if (!isNativeLocalAIAvailable()) return;
+
+  if (!localModelLoadPromise) {
+    localModelLoadPromise = window.Capacitor.Plugins.LocalAI.loadModel({
+      modelId: NEMOTRON_MODEL_ID
+    });
+  }
+
+  await localModelLoadPromise;
+}
+
+async function callBackendEndpoint(endpoint, payload) {
+  const response = await fetch(`http://127.0.0.1:5000/api/${endpoint}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({
-      user_prompt: userMessage,
-      chat_history: []
-    })
+    body: JSON.stringify(payload)
   });
-  const text = await response.text();
-  console.log("BACKEND RAW RESPONSE:", text);
 
+  const text = await response.text();
   if (!response.ok) {
-    throw new Error("Backend response failed: " + text);
+    throw new Error(`${endpoint} failed: ${text}`);
   }
 
-  const data = JSON.parse(text);
-  console.log(data);
-  
+  const parsed = safeJsonParse(text);
+  if (!parsed) {
+    throw new Error(`${endpoint} returned non-JSON response`);
+  }
+  return parsed;
+}
+
+function buildNativePrompt(endpoint, payload) {
+  return [
+    "You are vigOR's on-device Nemotron engine.",
+    "Return strict JSON only, no markdown.",
+    `Endpoint: ${endpoint}`,
+    `Payload: ${JSON.stringify(payload)}`
+  ].join("\n");
+}
+
+async function callAIBridge(endpoint, payload) {
+  if (isNativeLocalAIAvailable()) {
+    await ensureNativeModelLoaded();
+    const completion = await window.Capacitor.Plugins.LocalAI.chatCompletion({
+      messages: [
+        { role: "system", content: "Produce only valid compact JSON." },
+        { role: "user", content: buildNativePrompt(endpoint, payload) }
+      ],
+      temperature: 0.2,
+      maxTokens: 512
+    });
+
+    const rawContent = completion?.content || "";
+    const parsed = extractFirstJsonObject(rawContent);
+    if (!parsed) {
+      throw new Error(`Native LocalAI returned non-JSON output for ${endpoint}`);
+    }
+    return parsed;
+  }
+
+  var useLocal = getEffectiveAiBackend() === 'webgpu' && Boolean(navigator.gpu);
+  if (useLocal) {
+    reportLocalAiProgress({ text: 'Local AI…' });
+    try {
+      var mod = await import('./client-ai-webllm.mjs');
+      var result = await mod.runBridge(endpoint, payload, {
+        onProgress: reportLocalAiProgress
+      });
+      reportLocalAiProgress(null);
+      return result;
+    } catch (localErr) {
+      reportLocalAiProgress(null);
+      console.error(localErr);
+      throw localErr;
+    }
+  }
+
+  return callBackendEndpoint(endpoint, payload);
+}
+
+async function general_response(userMessage) {
+  const data = await callAIBridge("general_response", {
+    user_prompt: userMessage,
+    chat_history: []
+  });
   return data.action;
 }
 
 async function GO_respond_user(recommended_route_id, verdict, medical_logic, reasoning_summary, warnings) {
-  const response = await fetch("http://127.0.0.1:5000/api/GO_respond_user", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      recommended_route_id: recommended_route_id,
-      verdict: verdict,
-      medical_logic: medical_logic,
-      reasoning_summary: reasoning_summary,
-      warnings: warnings
-    })
+  const data = await callAIBridge("GO_respond_user", {
+    recommended_route_id: recommended_route_id,
+    verdict: verdict,
+    medical_logic: medical_logic,
+    reasoning_summary: reasoning_summary,
+    warnings: warnings
   });
-
-  const text = await response.text();
-  console.log("GO_respond_user RAW RESPONSE:", text);
-
-  if (!response.ok) {
-    throw new Error("GO_respond_user failed: " + text);
-  }
-
-  const data = JSON.parse(text);
-  console.log(data);
   return data.message || data.data;
 }
 
 async function WAIT_respond_user(medical_logic, reasoning_summary, warnings, suggestion) {
-  const response = await fetch("http://127.0.0.1:5000/api/WAIT_respond_user", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      medical_logic: medical_logic,
-      reasoning_summary: reasoning_summary,
-      warnings: warnings,
-      suggestion: suggestion
-    })
+  const data = await callAIBridge("WAIT_respond_user", {
+    medical_logic: medical_logic,
+    reasoning_summary: reasoning_summary,
+    warnings: warnings,
+    suggestion: suggestion
   });
-
-  const text = await response.text();
-  console.log("WAIT_respond_user RAW RESPONSE:", text);
-
-  if (!response.ok) {
-    throw new Error("WAIT_respond_user failed: " + text);
-  }
-
-  const data = JSON.parse(text);
-  console.log(data);
   return data.message || data.data;
 }
 
 async function asking_response(user_prompt) {
-  const response = await fetch("http://127.0.0.1:5000/api/asking_response", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      user_prompt: user_prompt
-    })
+  const data = await callAIBridge("asking_response", {
+    user_prompt: user_prompt
   });
-
-  const text = await response.text();
-  console.log("asking_response RAW RESPONSE:", text);
-
-  if (!response.ok) {
-    throw new Error("asking_response failed: " + text);
-  }
-
-  const data = JSON.parse(text);
-  console.log(data);
   return data.decision;
 }
 
 async function get_env_forecast(latitude, longitude, user_data) {
-  const response = await fetch("http://127.0.0.1:5000/api/get_env_forecast", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      latitude: latitude,
-      longitude: longitude,
-      user_data: user_data
-    })
+  const data = await callAIBridge("get_env_forecast", {
+    latitude: latitude,
+    longitude: longitude,
+    user_data: user_data
   });
-
-  const text = await response.text();
-  console.log("get_env_forecast RAW RESPONSE:", text);
-
-  if (!response.ok) {
-    throw new Error("get_env_forecast failed: " + text);
-  }
-
-  const data = JSON.parse(text);
-  console.log(data);
   return data.message || data.data;
 }
 
 async function get_routes(origin, destination, transport, user_data) {
-  const response = await fetch("http://127.0.0.1:5000/api/get_routes", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      origin: origin,
-      destination: destination,
-      transport: transport,
-      user_data: user_data
-    })
+  const data = await callAIBridge("get_routes", {
+    origin: origin,
+    destination: destination,
+    transport: transport,
+    user_data: user_data
   });
-
-  const text = await response.text();
-  console.log("get_routes RAW RESPONSE:", text);
-
-  if (!response.ok) {
-    throw new Error("get_routes failed: " + text);
-  }
-
-  const data = JSON.parse(text);
-  console.log(data);
   return data.data;
 }
 /* AAAAAAAAAA */
@@ -1608,24 +1858,98 @@ function escapeHtml(value) {
 }
 
 window.gm_authFailure = function () {
+    vigorMapsCoreInitialized = false;
+    clearSavedGoogleMapsApiKey();
     const mapElement = document.getElementById('google-map');
     const output = document.getElementById('map-location-output');
-    const message = 'Google Maps failed to load. Replace YOUR_GOOGLE_MAPS_API_KEY with a valid key and enable Maps JavaScript API, Places API, and Geocoding API.';
-    if (mapElement) mapElement.innerHTML = '<div class="map-loading">' + message + '</div>';
+    var message = 'Google rejected this API key (referrer/restriction or quota). Use Maps API key in the nav to enter a valid key and enable Maps JavaScript API, Places API, and Geocoding API.';
+    renderMapsKeyPlaceholder(message);
     if (output) output.textContent = message;
 };
 
-window.initGoogleMap = initGoogleMap;
+(function wireMapsApiKeyUi() {
+    function bind() {
+        var openBtn = document.getElementById('openMapsKeyBtn');
+        if (openBtn) openBtn.addEventListener('click', openMapsApiKeyModal);
+
+        syncAiBackendSelectUi();
+        var aiSel = document.getElementById('vigorAiBackendSelect');
+        if (aiSel) {
+            aiSel.addEventListener('change', function () {
+                try {
+                    localStorage.setItem(VIGOR_AI_BACKEND_KEY, aiSel.value);
+                } catch (ignore) {}
+                reportLocalAiProgress(null);
+            });
+        }
+
+        var mapFrame = document.querySelector('.google-map-frame');
+        if (mapFrame) {
+            mapFrame.addEventListener('click', function (e) {
+                if (e.target && e.target.id === 'mapsKeyBannerBtn') {
+                    openMapsApiKeyModal();
+                }
+            });
+        }
+
+        var saveBtn = document.getElementById('mapsKeySaveBtn');
+        if (saveBtn) {
+            saveBtn.addEventListener('click', function () {
+                var input = document.getElementById('mapsKeyInput');
+                var raw = (input && input.value) ? input.value.trim() : '';
+                if (!raw || raw.indexOf('AIza') !== 0) {
+                    alert('Paste a Google Maps API key — it normally starts with "AIza".');
+                    return;
+                }
+                setSavedGoogleMapsApiKey(raw);
+                closeMapsApiKeyModal();
+                location.reload();
+            });
+        }
+
+        var clearBtn = document.getElementById('mapsKeyClearBtn');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function () {
+                clearSavedGoogleMapsApiKey();
+                closeMapsApiKeyModal();
+                location.reload();
+            });
+        }
+
+        var cancelBtn = document.getElementById('mapsKeyCancelBtn');
+        if (cancelBtn) cancelBtn.addEventListener('click', closeMapsApiKeyModal);
+
+        var overlay = document.getElementById('mapsKeyModalOverlay');
+        if (overlay) {
+            overlay.addEventListener('click', function (e) {
+                if (e.target === overlay) closeMapsApiKeyModal();
+            });
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeMapsApiKeyModal();
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function () {
+            bind();
+            startGoogleMapsWhenReady();
+        });
+    } else {
+        bind();
+        startGoogleMapsWhenReady();
+    }
+})();
 </script>
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCutXQ0Qw-a0wT4lZ76lAYP3AR6I5Cj634&libraries=places,geometry&callback=initGoogleMap"></script>
 <script type="module">
   // 1. Imports from CDN
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
   import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  // 2. Your Configuration
+  // 2. Firebase web config (needed for Firebase Auth/Firestore; not interchangeable with Maps billing.)
   const firebaseConfig = {
     apiKey: "AIzaSyDoQolmXT7Ds56NVQCp7ZQI7iLxtosHOVw",
     authDomain: "vigor-f58b1.firebaseapp.com",
@@ -1681,11 +2005,6 @@ window.initGoogleMap = initGoogleMap;
     }
   });
 </script>
-
-
-
-<script type="module" src="https://ajax.googleapis.com/ajax/libs/@googlemaps/extended-component-library/0.6.11/index.min.js">
-    </script>
     
 <script type="module" src="./home.js"></script>
 

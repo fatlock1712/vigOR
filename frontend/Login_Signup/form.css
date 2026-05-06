@@ -1,0 +1,140 @@
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:#f0eeea;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:40px 20px;
+}
+
+.card{
+  background:#fff;
+  border-radius:20px;
+  padding:40px;
+  max-width:540px;
+  width:100%;
+  border:1px solid rgba(0,0,0,0.08);
+  box-shadow:0 2px 24px rgba(0,0,0,0.06);
+}
+
+.badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:#EAF3FE;color:#185FA5;
+  font-size:11px;font-weight:500;letter-spacing:0.6px;
+  padding:4px 12px;border-radius:99px;
+  text-transform:uppercase;margin-bottom:18px;
+}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:#185FA5}
+h1{font-size:22px;font-weight:500;color:#1a1a1a;letter-spacing:-0.5px;margin-bottom:6px}
+.subtitle{font-size:13px;color:#888;font-weight:300;margin-bottom:28px}
+.divider{height:1px;background:rgba(0,0,0,0.07);margin-bottom:28px}
+
+.field{margin-bottom:22px}
+.label{font-size:13px;font-weight:500;color:#1a1a1a;margin-bottom:7px;display:flex;align-items:center;gap:5px}
+.req{color:#E24B4A;font-size:11px}
+.hint{font-size:11px;color:#aaa;margin-top:5px}
+
+input[type="number"],input[type="text"],textarea,select{
+  width:100%;padding:10px 14px;
+  border:1px solid rgba(0,0,0,0.13);border-radius:10px;
+  font-size:14px;font-family:'DM Sans',sans-serif;
+  color:#1a1a1a;background:#fafafa;outline:none;
+  transition:border-color 0.15s,background 0.15s;
+  appearance:none;-webkit-appearance:none;
+}
+input[type="number"]:focus,input[type="text"]:focus,textarea:focus,select:focus{
+  border-color:#185FA5;background:#fff;
+}
+input::placeholder,textarea::placeholder{color:#ccc}
+
+
+/* Age + unit row */
+.age-row{display:flex;align-items:center;gap:10px}
+.age-row input{max-width:110px}
+.age-unit{font-size:13px;color:#888}
+
+/* Allergy checkbox chips */
+.allergy-group{display:flex;flex-wrap:wrap;gap:8px}
+.allergy-chip{display:flex;align-items:center;gap:7px;padding:9px 16px;border:1px solid rgba(0,0,0,0.12);border-radius:99px;cursor:pointer;transition:all 0.15s;background:#fafafa;user-select:none}
+.allergy-chip:hover{border-color:#185FA5;background:#EAF3FE}
+.allergy-chip input{width:15px;height:15px;accent-color:#185FA5;cursor:pointer;flex-shrink:0}
+.allergy-chip.checked{border-color:#185FA5;background:#EAF3FE;color:#185FA5}
+.allergy-chip .chip-label{font-size:13px;color:#1a1a1a;font-weight:400}
+.allergy-chip.checked .chip-label{color:#185FA5;font-weight:500}
+
+/* Severity slider */
+.severity-row{display:flex;flex-direction:column;gap:10px}
+.severity-levels{display:flex;justify-content:space-between;margin-top:4px}
+.sev-label{font-size:11px;color:#aaa;text-align:center;flex:1}
+.sev-label:first-child{text-align:left}
+.sev-label:last-child{text-align:right}
+
+input[type="range"]{
+  appearance: none;
+  -webkit-appearance:none;width:100%;height:4px;
+  border-radius:99px;outline:none;border:none;
+  background:linear-gradient(90deg,#185FA5 0%,#185FA5 var(--pct,33%),rgba(0,0,0,0.1) var(--pct,33%),rgba(0,0,0,0.1) 100%);
+  cursor:pointer;padding:0;
+}
+input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+  background:#185FA5;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.2);
+}
+input[type="range"]::-moz-range-thumb{
+  width:18px;height:18px;border-radius:50%;border:3px solid #fff;
+  background:#185FA5;box-shadow:0 1px 4px rgba(0,0,0,0.2);cursor:pointer;
+}
+
+.sev-badge{
+  display:inline-block;padding:3px 12px;border-radius:99px;font-size:12px;font-weight:500;
+  transition:all 0.2s;
+}
+
+/* Radio / checkbox group */
+.radio-group,.check-group{display:flex;flex-direction:column;gap:8px}
+.radio-opt,.check-opt{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 14px;border:1px solid rgba(0,0,0,0.1);border-radius:10px;
+  cursor:pointer;transition:all 0.15s;background:#fafafa;
+}
+.radio-opt:hover,.check-opt:hover{border-color:#185FA5;background:#EAF3FE}
+.radio-opt input,.check-opt input{
+  width:16px;height:16px;accent-color:#185FA5;cursor:pointer;flex-shrink:0;
+}
+.radio-opt.selected,.check-opt.selected{
+  border-color:#185FA5;background:#EAF3FE;
+}
+.opt-label{font-size:13px;color:#1a1a1a;font-weight:400}
+.opt-desc{font-size:11px;color:#888;margin-top:1px}
+
+/* Submit */
+.submit-row{margin-top:32px;display:flex;gap:10px}
+.btn-submit{
+  flex:1;padding:13px;border-radius:10px;
+  background:#185FA5;color:#fff;
+  font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;
+  border:none;cursor:pointer;letter-spacing:0.2px;
+  transition:background 0.15s,transform 0.1s;
+}
+.btn-submit:hover{background:#0c447c}
+.btn-submit:active{transform:scale(0.98)}
+.btn-reset{
+  padding:13px 18px;border-radius:10px;
+  background:transparent;color:#888;
+  font-size:14px;font-family:'DM Sans',sans-serif;
+  border:1px solid rgba(0,0,0,0.1);cursor:pointer;
+  transition:all 0.15s;
+}
+.btn-reset:hover{border-color:#aaa;color:#444}
+
+/* Result */
+.result-box{
+  display:none;margin-top:24px;
+  background:#EAF3DE;border:1px solid #97C459;border-radius:12px;
+  padding:16px 20px;
+}
+.result-box.show{display:block}
+.result-title{font-size:13px;font-weight:500;color:#3B6D11;margin-bottom:8px}
+.result-body{font-size:12px;color:#3B6D11;line-height:1.7;white-space:pre-wrap}

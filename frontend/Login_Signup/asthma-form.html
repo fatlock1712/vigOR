@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patient's Info</title>
+<link rel="stylesheet" href="./form.css">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="card">
+  <div class="badge"><span class="badge-dot"></span>Health Assessment</div>
+  <h1>Patient's Information</h1>
+  <p class="subtitle">Please fill out all the following information to help analyzing asthma level.</p>
+  <div class="divider"></div>
+
+  
+ <div class="field">
+  <div class="label"> Birth Year <span class="req">*</span></div>
+  <div class="age-row">
+    <input type="text" id="birthYear" 
+           inputmode="numeric" 
+           pattern="[0-9]*" 
+           placeholder="Ex: 2000" 
+           maxlength="4"
+           oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+    
+  </div>
+
+  <!-- Dị ứng -->
+  <div class="field">
+    <div class="label">What is your allergies?</div>
+    <div class="allergy-group">
+      <label class="allergy-chip" onclick="toggleChip(this)">
+        <input type="checkbox" name="allergy" value="Grass"> <span class="chip-label">🌿 Grass</span>
+      </label>
+      <label class="allergy-chip" onclick="toggleChip(this)">
+        <input type="checkbox" name="allergy" value="Tree"> <span class="chip-label">🌳 Tree</span>
+      </label>
+      <label class="allergy-chip" onclick="toggleChip(this)">
+        <input type="checkbox" name="allergy" value="Weed"> <span class="chip-label">🌾 Weed</span>
+      </label>
+    </div>
+    <div class="hint">Choose an option (if applicable)</div>
+  </div>
+
+  <!-- Độ nghiêm trọng -->
+  <div class="field">
+    <div class="label"> Asthma level <span class="req">*</span></div>
+    <div class="severity-row">
+      <div style="display:flex;align-items:center;gap:12px">
+        <input type="range" id="severity" min="0" max="4" value="2" step="1" oninput="updateSeverity(this.value)">
+        <span class="sev-badge" id="sev-badge">Nhẹ</span>
+      </div>
+      <div class="severity-levels">
+        <span class="sev-label">Asymptomatic</span>
+        <span class="sev-label">Intermittent</span>
+        <span class="sev-label">Mild</span>
+        <span class="sev-label">Moderate</span>
+        <span class="sev-label">Severe</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bệnh tim -->
+  <div class="field">
+    <div class="label">Do you have any history of heart disease? <span class="req">*</span></div>
+    <div class="radio-group" id="heart-group">
+      <label class="radio-opt" onclick="selectRadio('heart','no',this)">
+        <input type="radio" name="heart" value="no"> 
+        <div>
+          <div class="opt-label">❌ No</div>
+          <div class="opt-desc">No prior history of heart disease.</div>
+        </div>
+      </label>
+      <label class="radio-opt" onclick="selectRadio('heart','yes',this)">
+        <input type="radio" name="heart" value="yes">
+        <div>
+          <div class="opt-label">✅ Yes</div>
+          <div class="opt-desc">Prior history of heart disease.</div>
+        </div>
+      </label>
+        <div class="hint">When the heart is weakened, it cannot pump as effectively to maintain oxygen levels during an asthma attack.</div>
+    </div>
+  </div>
+
+  <div class="submit-row">
+  
+    <button class="btn-submit" onclick="submitForm()">Submit</button>
+  </div>
+
+  <div class="result-box" id="result-box">
+    <div class="result-title">✓ form submitted.....</div>
+    <div class="result-body" id="result-body"></div>
+  </div>
+</div>
+
+<script>
+function toggleChip(el){
+  const cb = el.querySelector('input');
+  setTimeout(()=>{ el.classList.toggle('checked', cb.checked); }, 0);
+}
+
+const sevConfig = {
+  0:{label:'Asymptomatic',bg:'#EAF6F6',color:'#0B606A',pct:'0%'},
+  1:{label:'Intermittent',bg:'#EAF3DE',color:'#3B6D11',pct:'25%'},
+  2:{label:'Mild',bg:'#EAF3FE',color:'#185FA5',pct:'50%'},
+  3:{label:'Moderate',bg:'#FAEEDA',color:'#854F0B',pct:'75%'},
+  4:{label:'Severe',bg:'#FCEBEB',color:'#A32D2D',pct:'100%'},
+};
+
+function updateSeverity(v){
+  const c = sevConfig[v];
+  const badge = document.getElementById('sev-badge');
+  badge.textContent = c.label;
+  badge.style.background = c.bg;
+  badge.style.color = c.color;
+  document.getElementById('severity').style.setProperty('--pct', c.pct);
+}
+updateSeverity(2);
+
+function selectRadio(name, val, el){
+  document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+    r.closest('.radio-opt').classList.remove('selected');
+    r.checked = false;
+  });
+  el.querySelector('input').checked = true;
+  el.classList.add('selected');
+}
+
+function resetForm(){
+  document.getElementById('age').value = '';
+  document.querySelectorAll('input[name="allergy"]').forEach(cb => {
+    cb.checked = false;
+    cb.closest('.allergy-chip').classList.remove('checked');
+  });
+  document.getElementById('severity').value = 2; updateSeverity(2);
+  document.querySelectorAll('.radio-opt').forEach(o => {
+    o.classList.remove('selected');
+    o.querySelector('input').checked = false;
+  });
+  document.getElementById('result-box').classList.remove('show');
+}
+
+function submitForm(){
+  const age = document.getElementById('age').value;
+  const heart = document.querySelector('input[name="heart"]:checked');
+  const sev = document.getElementById('severity').value;
+  const allergies = [...document.querySelectorAll('input[name="allergy"]:checked')].map(c=>c.value);
+
+  if(!age){ alert('Please fill out your age'); return; }
+  if(!heart){ alert('Please choose the history of cardiovascular disease'); return; }
+
+  const heartMap = {no:'Never',yes:'Prior history'};
+  const sevLabel = sevConfig[sev].label;
+
+  const body = `• Age: ${age} Age
+• Allergies: ${allergies.length ? allergies.join(', ') : 'Không có'}
+• Asthma Level: ${sevLabel}
+• History of cardiovascular disease: ${heartMap[heart.value]}`;
+
+  // document.getElementById('result-body').textContent = body;
+  document.getElementById('result-box').classList.add('show');
+  // document.getElementById('result-box').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+</script>
+<script type="module" src="./form.js"></script>
+</body>
+</html>

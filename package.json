@@ -1,0 +1,32 @@
+{
+  "name": "vigor",
+  "version": "1.0.0",
+  "description": "_Mobile Deployment:_ Transforming the web platform into a native app for real-time, on-the-go GPS alerts (Using WebGPU for running Nemotron nano model locally in user's phone).",
+  "main": "home.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "npx --yes serve frontend -p 8080",
+    "cap:sync": "npx cap sync ios",
+    "cap:open:ios": "npx cap open ios"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fatlock1712/vigOR.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/fatlock1712/vigOR/issues"
+  },
+  "homepage": "https://github.com/fatlock1712/vigOR#readme",
+  "dependencies": {
+    "@capacitor/cli": "^8.3.1",
+    "@capacitor/core": "^8.3.1",
+    "@capacitor/ios": "^8.3.1"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}
