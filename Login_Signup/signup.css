@@ -1,0 +1,24 @@
+/* MAIN LAYOUT - Replaced Grid with Centered Flexbox */
+.auth-wrap {
+  flex: 1;
+  display: flex;             /* IMPORTANT: Change this from 'grid' to 'flex' */
+  justify-content: center;   /* Centers horizontally */
+  align-items: center;       /* Centers vertically */
+  min-height: calc(100vh - 60px);
+  width: 100%;
+  padding: 20px;
+}
+
+/* RIGHT: FORM PANEL */
+.auth-right {
+  width: 100%;
+  max-width: 520px;          /* Prevents it from stretching too wide */
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  background: var(--card);   /* Gives it a nice white card background */
+  border: 1px solid var(--border);
+  border-radius: 20px;       /* Smooth rounded corners */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05); /* Subtle shadow so it pops */
+  margin: 0 auto;            /* Backup centering */
+}

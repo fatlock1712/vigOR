@@ -67,9 +67,9 @@ signupForm.addEventListener("submit", async (e) => {
       createdAt: serverTimestamp()
     });
 
-    alert("Account Initialized Successfully!");
+    alert("Account signed up successfully!");
     // Chuyển hướng về trang login (đảm bảo đường dẫn đúng với Live Server của bạn)
-    window.location.href = "./login.html";
+    window.location.href = "./asthma-form.html";
 
   } catch (error) {
     console.error("Signup error:", error);
@@ -112,7 +112,7 @@ googleSignUpBtn.addEventListener("click", async () => {
       { merge: true }
     );
 
-    window.location.href = "./login.html";
+    window.location.href = "./asthma-form.html";
   } catch (error) {
     console.error(error);
     alert("Google Initialization failed: " + error.message);

@@ -1,9 +1,7 @@
-
-
-API_KEY = 
-CF_API_KEY = 
-CF_ACCOUNT_ID = 
-
+import os
+API_KEY = "AIzaSyA5DP2TA82kWcbe8syZQQZWA4Ai2sUL58o"
+CF_API_KEY = "cfut_6h23KYTME17gVVSFxBlH4KlAnuZ4ulMVCIoFDsO52034f7e6"
+CF_ACCOUNT_ID = "bc3c7d5d0d355d554ab05f65986614e2"
 
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
@@ -44,7 +42,7 @@ def get_env_data(latitude, longitude, API_KEY ):
 
     pollen_url = "https://pollen.googleapis.com/v1/forecast:lookup"
     try:
-        pollen_response = requests.get(pollen_url, params={"key": api_key, "location.latitude": latitude, "location.longitude": longitude, "days": 1, "languageCode": "en"}, timeout=3)
+        pollen_response = requests.get(pollen_url, params={"key": API_KEY, "location.latitude": latitude, "location.longitude": longitude, "days": 1, "languageCode": "en"}, timeout=3)
         pollen_data = pollen_response.json()
         if 'dailyInfo' in pollen_data and pollen_data['dailyInfo']:
             for pt in pollen_data['dailyInfo'][0].get('pollenTypeInfo', []):

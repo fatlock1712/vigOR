@@ -1,0 +1,24 @@
+/* 1. Update the main container to Flexbox for centering */
+.auth-wrap {
+  flex: 1;
+  display: flex;            /* Change from grid to flex */
+  justify-content: center;  /* Center horizontally */
+  align-items: center;      /* Center vertically */
+  min-height: calc(100vh - 60px); /* Fill the screen height */
+  width: 100%;
+  padding: 20px;
+}
+
+/* 2. Style the form as a centered card */
+.auth-right {
+  width: 100%;
+  max-width: 480px;         /* Prevents the form from becoming too wide */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px;
+  background: var(--card);  /* Optional: gives it a white background */
+  border: 1px solid var(--border);
+  border-radius: 20px;      /* Rounded corners */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05); /* Soft shadow for a "floating" look */
+}

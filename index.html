@@ -102,18 +102,7 @@
     .how-step-t{font-size:16px;font-weight:600;color:var(--fg);margin-bottom:8px;letter-spacing:-0.01em;}
     .how-step-d{font-size:13px;color:var(--muted-fg);line-height:1.65;}
 
-    /* FEATURES / PROTOCOLS */
-    .features{background:var(--bg);border-top:1px solid var(--border);}
-    .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px;}
-    .fcard{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;box-shadow:0 1px 3px rgba(0,0,0,0.06);transition:box-shadow 0.25s,transform 0.25s,border-color 0.25s;position:relative;overflow:hidden;}
-    .fcard::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,82,255,0.03),transparent);opacity:0;transition:opacity 0.25s;pointer-events:none;}
-    .fcard:hover{box-shadow:0 12px 28px rgba(0,0,0,0.09);transform:translateY(-4px);border-color:rgba(0,82,255,0.18);}
-    .fcard:hover::after{opacity:1;}
-    .fcard-icon{width:46px;height:46px;border-radius:12px;background:var(--grad);display:flex;align-items:center;justify-content:center;margin-bottom:16px;box-shadow:0 4px 12px rgba(0,82,255,0.22);}
-    .fcard-icon svg{width:20px;height:20px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-    .fcard-num{font-family:var(--f-m);font-size:11px;letter-spacing:0.1em;color:var(--accent);margin-bottom:8px;text-transform:uppercase;}
-    .fcard-title{font-size:16px;font-weight:600;color:var(--fg);margin-bottom:8px;letter-spacing:-0.01em;}
-    .fcard-desc{font-size:13px;color:var(--muted-fg);line-height:1.65;}
+
 
     /* MAP & CHATBOX */
     .map-section{background:var(--bg);border-top:1px solid var(--border);}
@@ -284,7 +273,6 @@
   <ul class="nav__links">
     <li><a href="#hero">Home</a></li>
     <li><a href="#how">How to Use</a></li>
-    <li><a href="#features">Protocols</a></li>
     <li><a href="#map-section">Map & Chat</a></li>
     <li><a href="#stats">Statistics</a></li>
     <li><a href="about.html">About Us</a></li>
@@ -301,11 +289,15 @@
         <div id="user-avatar" class="avatar-circle">
             <i class="fa-solid fa-user"></i>
         </div> 
-        <div class="avatar-dropdown">
-            <button id="logout-btn" class="logout-btn">
-                <i class="fa-solid fa-right-from-bracket"></i> Sign Out
-            </button>
-        </div> 
+<div class="avatar-dropdown">
+    <a href="../Login_Signup/asthma-form.html" class="dropdown-item">
+        <i class="fa-solid fa-file-medical"></i> Update Medical Record
+    </a>
+    
+    <button id="logout-btn" class="logout-btn">
+        <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+    </button>
+</div>
     </div>
 </div>
 </nav>
@@ -314,7 +306,7 @@
 <section class="hero" id="hero">
   <div>
     <div style="margin-bottom:22px;" class="reveal">
-      <div class="badge"><div class="badge-dot"></div><span>Public Beta — Enrollment Open</span></div>
+      <div class="badge"><div class="badge-dot"></div><span>Testing version</span></div>
     </div>
     <h1 class="hero__title reveal d1">vig<span class="grad-txt">OR</span></h1>
     <p class="hero__sub reveal d2">is a health intelligence agent. Upload your medical records, monitor air quality, and receive Nemotron-powered health insights in real time.</p>
@@ -572,43 +564,7 @@
       <p class="foot-tag">High-tech, low-friction healthcare.<br>Built for Oregon. Deployed everywhere.</p>
   </div>
     <div class="foot-col">
-      <div class="foot-col-h">Team</div>
-      <div class="foot-member">
-        <div>
-          <div class="foot-member-name">Hoang Minh Bui</div>
-          <div class="foot-member-role">Full-stack Engineer</div>
-          <a class="foot-member-li" href="https://www.linkedin.com/in/minhhoangbui236/" target="_blank" rel="noopener">
-            <i class="fa-brands fa-linkedin"></i> LinkedIn
-          </a>
-        </div>
-      </div>
-      <div class="foot-member">
-        <div>
-          <div class="foot-member-name">Hung La</div>
-          <div class="foot-member-role">Full-stack Developer</div>
-          <a class="foot-member-li" href="https://www.linkedin.com/in/hung-la-a01348376/" target="_blank" rel="noopener">
-            <i class="fa-brands fa-linkedin"></i> LinkedIn
-          </a>
-        </div>
-      </div>
-      <div class="foot-member">
-        <div>
-          <div class="foot-member-name">Khanh Phan</div>
-          <div class="foot-member-role">Full-stack Engineer</div>
-          <a class="foot-member-li" href="https://www.linkedin.com/in/kh%C3%A1nh-phan-huy-11a025385/" target="_blank" rel="noopener">
-            <i class="fa-brands fa-linkedin"></i> LinkedIn
-          </a>
-        </div>
-      </div>
-      <div class="foot-member">
-        <div>
-          <div class="foot-member-name">Huu Phat Loc Nguyen</div>
-          <div class="foot-member-role">AI / LLM</div>
-          <a class="foot-member-li" href="https://www.linkedin.com/in/nguyenloc1712/" target="_blank" rel="noopener">
-            <i class="fa-brands fa-linkedin"></i> LinkedIn
-          </a>
-        </div>
-      </div>
+
     </div>
   </div>
   <div class="foot-bar"></div>
@@ -817,7 +773,41 @@ function setupMapClick() {
 
         reverseGeocode(point.lat, point.lng, function (address) {
             point.address = address || 'Clicked location';
-            setRouteDestination(point, true);
+            
+            // Logic: If start is empty, OR if both start and end are already set (starting over)
+            if (!routeStart || (routeStart && routeDestination)) {
+                
+                // If starting over, clear the old destination marker and input
+                if (routeStart && routeDestination) {
+                    routeDestination = null;
+                    if (destinationMarker) {
+                        destinationMarker.setMap(null);
+                        destinationMarker = null;
+                    }
+                    const endInput = document.getElementById('routeEndInput');
+                    if (endInput) endInput.value = '';
+                    clearRoutePolylines(); // Clear any drawn routes
+                }
+
+                // Set the Start point
+                setRouteStart(point, true);
+                
+                // Update the starting input field
+                const startInput = document.getElementById('routeStartInput');
+                if (startInput && point.address !== 'Clicked location') {
+                    startInput.value = point.address;
+                }
+                
+                updateRouteStatus('Start location set. Now click the map to set your destination.');
+                
+            } 
+            // Logic: If start is already set, but destination is empty
+            else if (routeStart && !routeDestination) {
+                // Set the Destination point
+                setRouteDestination(point, true);
+                
+                // The setRouteDestination function already updates the routeEndInput field for us
+            }
         });
     });
 }
@@ -1693,8 +1683,10 @@ window.initGoogleMap = initGoogleMap;
 </script>
 
 
+
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/@googlemaps/extended-component-library/0.6.11/index.min.js">
     </script>
+    
 <script type="module" src="./home.js"></script>
 
 

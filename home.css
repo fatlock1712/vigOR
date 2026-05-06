@@ -726,10 +726,10 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
 }
 
 
+/* Ensure the parent triggers the child */
 #user-profile:hover .avatar-dropdown {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
 }
 
 
@@ -933,9 +933,9 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
 }
 
 .ai-chat-messages {
-    max-height: 210px;
-    overflow-y: auto;
-    padding-right: 4px;
+  flex: 1; /* Forces this section to fill all available middle space */
+  overflow-y: auto; /* Only the messages will get a scrollbar */
+  padding-bottom: 16px;
 }
 
 .ai-msg {
@@ -1028,15 +1028,13 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
         z-index: 5;
     }
 
-    .route-ai-panel {
-        position: relative;
-        left: auto;
-        right: auto;
-        bottom: auto;
-        margin: 12px;
-        max-height: none;
-    }
-
+   .route-ai-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 550px; /* 👈 Increase this number to make the whole box taller */
+  max-height: 700px; 
+  overflow: hidden;  /* Prevents the whole box from scrolling */
+}
     .route-console-controls .route-input-row {
         grid-template-columns: 18px 1fr;
     }
@@ -1109,3 +1107,171 @@ footer{background:var(--fg);padding:56px clamp(20px,5vw,72px) 28px;}
         z-index: 1 !important;
         border-radius: 12px;
     }
+
+    /* Ensure the profile container is positioned for the absolute dropdown */
+.nav__actions {
+    position: relative;
+}
+
+#user-profile {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.avatar-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--grad);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+/* Hide dropdown by default */
+/* Styling for the Dropdown Menu Container */
+.avatar-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--sha-lg);
+    min-width: 200px;
+    margin-top: 10px;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+/* Styling for the new Update link */
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--fg);
+    border-bottom: 1px solid var(--border);
+    transition: all 0.15s ease;
+}
+
+.dropdown-item i {
+    color: var(--accent);
+    font-size: 14px;
+}
+
+.dropdown-item:hover {
+    background: var(--muted);
+    color: var(--accent);
+}
+
+/* Adjusting the Logout button to match */
+.logout-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    color: #ef4444; /* Red color for sign out */
+    transition: background 0.15s;
+}
+
+.logout-btn:hover {
+    background: #fee2e2;
+}
+/* Show dropdown when hovering over the profile container */
+#user-profile:hover .avatar-dropdown {
+    display: block;
+}
+
+.logout-btn {
+    width: 100%;
+    padding: 8px;
+    background: none;
+    border: none;
+    color: #ff4d4d;
+    cursor: pointer;
+    text-align: left;
+    font-family: var(--f-b);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logout-btn:hover {
+    background: var(--muted);
+}
+/* Creates an invisible bridge connecting the avatar to the dropdown */
+/* The Bridge */
+.avatar-dropdown::before {
+    content: '';
+    position: absolute;
+    /* This should match the 'margin-top' or 'top' gap you have */
+    top: -30px; 
+    left: -50px;   /* Made it wider to catch diagonal mouse movement */
+    right: -50px;  /* Made it wider */
+    height: 40px;  /* Increased height to ensure overlap */
+    background: transparent; /* Change to 'rgba(255,0,0,0.2)' to see it for debugging! */
+    z-index: -1;   /* Keeps it behind the menu content but within the hover zone */
+}
+/* --- TRANSPORT SELECTOR BUTTONS --- */
+.transport-selector {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 12px;
+}
+
+/* Default state: Dimmed and unlit */
+.transport-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle dark-mode border */
+  color: rgba(255, 255, 255, 0.5);            /* Dimmed text */
+  font-family: var(--f-m);
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Hover state: Slight highlight */
+.transport-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ACTIVE STATE: "Lights On" */
+.transport-btn.active {
+  background: rgba(0, 82, 255, 0.15);         /* Light blue background tint */
+  border: 1px solid var(--accent2);           /* Bright blue border */
+  color: #ffffff;                             /* Bright white text */
+  box-shadow: 0 0 12px rgba(77, 124, 255, 0.4); /* Neon glow effect */
+  transform: translateY(-1px);
+}
+
+/* --- HIDE SCROLLBAR IN CHAT --- */
+.ai-chat-messages {
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+  -ms-overflow-style: none; /* Hides scrollbar in IE 10+ */
+}
+
+/* Hides scrollbar in Chrome, Safari, and Edge */
+.ai-chat-messages::-webkit-scrollbar {
+  display: none; 
+}
+

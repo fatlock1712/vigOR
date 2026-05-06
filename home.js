@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         logoutBtn.addEventListener('click', () => {
             signOut(auth).then(() => {
                 alert("You're sign out");
-                window.location.assign("../Login_SignUp/login.html");
+                window.location.assign("./index.html");
             }).catch(console.error);
         });
     }
@@ -121,3 +121,19 @@ async function init() {
 
 document.addEventListener('DOMContentLoaded', init);
 
+// Toggle dropdown on click
+const userProfile = document.getElementById('user-profile');
+const avatarDropdown = userProfile.querySelector('.avatar-dropdown');
+
+userProfile.addEventListener('click', (e) => {
+    // Prevent the click from bubbling up to the 'window' listener below
+    e.stopPropagation();
+    avatarDropdown.classList.toggle('show-menu');
+});
+
+// Close the menu if the user clicks anywhere else on the screen
+window.addEventListener('click', () => {
+    if (avatarDropdown.classList.contains('show-menu')) {
+        avatarDropdown.classList.remove('show-menu');
+    }
+});
